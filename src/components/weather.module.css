@@ -1,0 +1,40 @@
+.card {
+	width: 380px;
+	/* height: 181px; */
+	display: flex;
+	/* background-color: #f24726; */
+	color: white;
+	padding: 30px;
+	border-radius: 2px;
+	gap: 2rem;
+	margin: 1rem;
+	position: relative;
+}
+
+.closeBtn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+.temp {
+	font-size: 46px;
+	font-weight: 500;
+}
+
+.city {
+	font-size: 0.9rem;
+	font-weight: 900;
+}
+
+.bgHighTemp {
+	background-color: #f24726;
+}
+
+.bgModerateTemp {
+	background-color: #fac710;
+}
+
+.bgLowTemp {
+	background-color: #2d9bf0;
+}

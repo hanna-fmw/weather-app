@@ -1,29 +1,45 @@
 import React from 'react'
 import styles from './weather.module.css'
 import '../app/globals.css'
-import sun from '../../public/sun.svg'
+import sunny from '../../public/sun.svg'
+import cloudy from '../../public/cloud.svg'
+import snowy from '../../public/snow.svg'
+import fallback from '../../public/fallback.svg'
 import Image from 'next/image'
 import closeBtn from '../../public/closeBtn.svg'
 
 type City = {
 	cityName: string
 	temperature: number
-	rain: string
+	currCondition: string
 }
 
-const WeatherCard = ({ cityName, temperature, rain }: City) => {
-	const highTemp = temperature > 20
-	const lowTempOrRain = temperature < 20 || rain.includes('iam')
-	//MISS: const moderateTemp = temperature > 0 && temperature < 19
-	const moderateTemp = !highTemp && !lowTempOrRain
+const WeatherCard = ({ cityName, temperature, currCondition }: City) => {
+	// console.log(currCondition)
+	//Background colors
+	const highTemp = temperature > 19
+	//Blue background
+	const lowTempOrRain = temperature < 1 || currCondition.toLowerCase().includes('rain')
+	//Else (i.e. 1-19 degrees and no rain) yellow background
+
 	return (
-		<div className={`${highTemp ? styles.bgHighTemp : lowTempOrRain ? styles.bgLowTemp : moderateTemp} ${styles.card}`}>
+		<div className={`${highTemp ? styles.bgHighTemp : lowTempOrRain ? styles.bgLowTemp : styles.bgModerateTemp} ${styles.card}`}>
 			<div className={styles.closeBtn}>
 				<Image src={closeBtn} width={30} height={30} alt='Close Button' />
 			</div>
 
 			<div>
-				<Image src={sun} height={60} width={60} alt='Sun icon' />
+				{(() => {
+					if (currCondition.toLowerCase().includes('sunny')) {
+						return <Image src={sunny} height={60} width={60} alt='Sunny Weather icon' />
+					} else if (currCondition.toLowerCase().includes('cloudy')) {
+						return <Image src={cloudy} height={60} width={60} alt='Cloudy Weather icon' />
+					} else if (currCondition.toLowerCase().includes('snowy')) {
+						return <Image src={snowy} height={60} width={60} alt='Snowy Weather icon' />
+					} else {
+						return <Image src={fallback} height={60} width={60} alt='Fallback Weather icon' />
+					}
+				})()}
 			</div>
 			<div>
 				<span>{temperature}°C</span>

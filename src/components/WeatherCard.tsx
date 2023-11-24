@@ -11,26 +11,27 @@ import closeBtn from '../../public/closeBtn.svg'
 type City = {
 	cityName: string
 	temperature: number
-	currCondition: string
+	currCondition?: string
+	deleteCity: () => void
 }
 
-const WeatherCard = ({ cityName, temperature, currCondition }: City) => {
+const WeatherCard = ({ cityName, temperature, currCondition, deleteCity }: City) => {
 	// console.log(currCondition)
 	//Background colors
 	const highTemp = temperature > 19
 	//Blue background
-	const lowTempOrRain = temperature < 1 || currCondition.toLowerCase().includes('rain')
+	const lowTempOrRain = temperature < 1 || currCondition?.toLowerCase().includes('rain')
 	//Else (i.e. 1-19 degrees and no rain) yellow background
 
 	return (
 		<div className={`${highTemp ? styles.bgHighTemp : lowTempOrRain ? styles.bgLowTemp : styles.bgModerateTemp} ${styles.card}`}>
 			<div className={styles.closeBtn}>
-				<Image src={closeBtn} width={30} height={30} alt='Close Button' />
+				<Image src={closeBtn} width={30} height={30} alt='Close Button' onClick={deleteCity} />
 			</div>
 
 			<div>
 				{(() => {
-					if (currCondition.toLowerCase().includes('sunny')) {
+					if (currCondition && currCondition.toLowerCase().includes('sunny')) {
 						return <Image src={sunny} height={60} width={60} alt='Sunny Weather icon' />
 					} else if (currCondition.toLowerCase().includes('cloudy')) {
 						return <Image src={cloudy} height={60} width={60} alt='Cloudy Weather icon' />
@@ -50,3 +51,9 @@ const WeatherCard = ({ cityName, temperature, currCondition }: City) => {
 }
 
 export default WeatherCard
+
+
+
+
+
+

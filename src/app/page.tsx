@@ -4,12 +4,10 @@ import styles from './page.module.css'
 import './globals.css'
 import WeatherCard from '@/components/WeatherCard'
 import logoAlster from '../../public/logoAlster.png'
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import plusSign from '../../public/plusSign.png'
-import { v4 as uuidv4 } from 'uuid'
 
-type WeatherType = {
+type WeatherData = {
 	location: {
 		name: string
 	}
@@ -23,9 +21,9 @@ type WeatherType = {
 
 type NewWeatherItem = {
 	id: string
-	cityName: string
-	temperature: number
-	currCondition: string
+	cityName?: string
+	temperature?: number
+	currCondition?: string
 }
 
 const getCurrentWeather = async (cityName: string) => {
@@ -37,43 +35,64 @@ const getCurrentWeather = async (cityName: string) => {
 		console.error('Error:', error)
 	}
 }
+
 export default function Home() {
 	const [enteredCity, setEnteredCity] = useState<string>('')
 	const [weatherList, setWeatherList] = useState<NewWeatherItem[]>([])
-
-	const [weatherData, setWeatherData] = useState<null | WeatherType>(null)
-
+	const [weatherData, setWeatherData] = useState<null | WeatherData>(null)
 	const [isCityNotFound, setIsCityNotFound] = useState<boolean>(false)
+
+	// const getWeatherList = JSON.parse(localStorage.getItem('weatherItemAdded'))
+	useEffect(() => {
+		// if (getWeatherList === null) {
+		// 	setWeatherList([])
+		// } else {
+		// 	setWeatherList(getWeatherList)
+		// }
+
+		// if (getWeatherList === null) {
+		// 	setWeatherList([])
+		// } else if (typeof window !== 'undefined') {
+		// 	setWeatherList(getWeatherList)
+		// }
+
+		// if (typeof window !== 'undefined') {
+		// 	setWeatherList(getWeatherList)
+		// }
+
+		if (weatherData && weatherData.location && weatherData.location.name) {
+			addCity()
+		} else {
+			setIsCityNotFound(true)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [weatherData])
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setEnteredCity(e.target.value)
 	}
 
 	const searchCity = async () => {
-		if (!enteredCity) {
-			alert('Du måste ange en stad')
-		}
-
 		try {
 			const data = await getCurrentWeather(enteredCity)
-
-			// MISS: Update the state with the fetched data
 			setWeatherData(data)
-
-			if (!weatherData?.location?.name) {
-				setIsCityNotFound(true)
-			} else {
-				addCity()
-			}
+			console.log(data)
 		} catch (error) {
 			console.error('Error:', error)
 		}
 		setEnteredCity('')
+		setIsCityNotFound(false)
 	}
 
 	const clearCityNotFoundString = () => {
 		if (isCityNotFound) {
 			setIsCityNotFound(false)
+		}
+	}
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			searchCity()
 		}
 	}
 
@@ -84,15 +103,22 @@ export default function Home() {
 			temperature: weatherData?.current?.temp_c,
 			currCondition: weatherData?.current?.condition?.text,
 		}
-		setWeatherList([...weatherList, newWeatherItem])
-		console.log(weatherList)
-		return weatherList
+
+		//If-sats för att kolla att ingen undefined
+		//newWeatherItem.cityName !== undefined
+		//leta i objekt - kolla med Object.key
+		if (weatherData && weatherData.location && newWeatherItem.cityName && newWeatherItem.temperature && newWeatherItem.currCondition) {
+			setWeatherList([...weatherList, newWeatherItem])
+			return weatherList
+		}
+		// localStorage.setItem('weatherItemAdded', JSON.stringify([...weatherList, newWeatherItem]))
 	}
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter') {
-			searchCity()
-		}
+	const deleteCity = (id: string) => {
+		const updatedList = [...weatherList].filter((item) => item.id !== id)
+		setWeatherList(updatedList)
+		// localStorage.setItem('weatherItemAdded', JSON.stringify(updatedList))
+		return updatedList
 	}
 
 	return (
@@ -118,40 +144,27 @@ export default function Home() {
 			</div>
 
 			<div>
-				{!weatherData?.location?.name && isCityNotFound && <p>Det finns ingen stad som matchar din sökning</p>}
+				{weatherData && isCityNotFound && <p>Det finns ingen stad som matchar din sökning</p>}
 
 				<div className={styles.container}>
 					{weatherData &&
-						weatherList.map((item, i) => {
-							return (
-								<div key={i}>
-									{/* <div>{item?.cityName}</div> */}
-									<WeatherCard cityName={item?.cityName} temperature={item?.temperature} currCondition={item?.currCondition} />
-								</div>
-							)
-						})}
-
-					{/* funkade: {item?.cityName} */}
-
-					{/* {weatherData?.location?.name && (
-						
-						<div>{weatherData?.location?.name}</div>
-						// <WeatherCard
-						// 	cityName={weatherData?.location?.name}
-						// 	temperature={weatherData?.current?.temp_c}
-						// 	currCondition={weatherData?.current?.condition?.text}
-						// />
-					)} */}
+						weatherList.sort((a, b) => (a.temperature && b.temperature ? a.temperature - b.temperature : 0)) &&
+						// weatherList.filter((item) => (enteredCity.toLowerCase() === '' ? item : item.cityName?.toLowerCase().includes(enteredCity))) &&
+						weatherList.map((item, i) => (
+							<div key={i}>
+								{item.cityName && item.temperature && item.currCondition && (
+									<WeatherCard
+										cityName={item.cityName}
+										temperature={item.temperature}
+										currCondition={item.currCondition}
+										deleteCity={() => deleteCity(item.id)}
+									/>
+								)}
+							</div>
+						))}
 				</div>
 			</div>
 			<Image src={logoAlster} width={30} height={30} alt='Alster Logotype' className={styles.logoAlster} />
 		</main>
 	)
 }
-
-//http://api.weatherapi.com/v1/current.json?key=ce04308cc1fbad6c9ccc333fdd320aff&q=London&aqi=no
-
-//const res = await fetch('http://api.weatherstack.com/current?access_key=1d63be06387a12f412ad56654a29768b&query=Madrid')
-//Funkar:
-//const res = await fetch('http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=ce04308cc1fbad6c9ccc333fdd320aff')
-// const res = await fetch('http://omdbapi.com/?apikey=15d1e0a0&s=superman')

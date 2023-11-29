@@ -12,10 +12,11 @@ type City = {
 	cityName: string
 	temperature: number
 	currCondition?: string
+	country: string
 	deleteCity: () => void
 }
 
-const WeatherCard = ({ cityName, temperature, currCondition, deleteCity }: City) => {
+const WeatherCard = ({ cityName, temperature, currCondition, deleteCity, country }: City) => {
 	// console.log(currCondition)
 	//Background colors
 	const highTemp = temperature > 19
@@ -44,16 +45,12 @@ const WeatherCard = ({ cityName, temperature, currCondition, deleteCity }: City)
 			</div>
 			<div>
 				<span>{temperature}°C</span>
-				<div>{cityName}</div>
+				<div>
+					{cityName} ({country})
+				</div>
 			</div>
 		</div>
 	)
 }
 
 export default WeatherCard
-
-
-
-
-
-

@@ -1,14 +1,12 @@
 .card {
-	width: 380px;
-	/* height: 181px; */
 	display: flex;
-	/* background-color: #f24726; */
 	color: white;
 	padding: 30px;
 	border-radius: 2px;
 	gap: 2rem;
 	margin: 1rem;
 	position: relative;
+	min-width: 320px;
 }
 
 .closeBtn {

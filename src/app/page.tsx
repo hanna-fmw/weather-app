@@ -60,7 +60,7 @@ export default function Home() {
 	const [inputFieldEmptyPopup, setIsInputFieldEmptyPopup] = useState<boolean>(false)
 
 	//Suggestion List (from Search API)
-	const [cityItems, setCityItems] = useState<CityItem[]>([])
+	const [cityItems, setCityItems] = useState<CityItem[] | CityItem>([])
 
 	//Keep track of active item in suggestion list array
 	const [activeItem, setActiveItem] = useState(-1)
@@ -199,7 +199,7 @@ export default function Home() {
 
 		switch (e.key) {
 			case 'ArrowDown':
-				activeItem < cityItems.length - 1 && setActiveItem((prev) => prev + 1)
+				Array.isArray(cityItems) && activeItem < cityItems.length - 1 && setActiveItem((prev) => prev + 1)
 				break
 
 			case 'ArrowUp':
@@ -217,11 +217,11 @@ export default function Home() {
 						break
 
 					case activeItem >= 0:
-						getCurrentWeather(cityItems[activeItem]?.id)
+						Array.isArray(cityItems) && getCurrentWeather(cityItems[activeItem]?.id)
 						break
 
-					case cityItems.length === 1:
-						getCurrentWeather(cityItems[0]?.id)
+					case Array.isArray(cityItems) && cityItems.length === 1:
+						Array.isArray(cityItems) && getCurrentWeather(cityItems[0]?.id)
 						break
 
 					default:
@@ -290,7 +290,7 @@ export default function Home() {
 					onChange={(e) => handleOnChange(e.target.value)}
 					value={enteredCity}
 					autoComplete='off'
-					onKeyDown={(e) => handleArrowKeys(e, activeItem)}
+					onKeyDown={(e) => handleArrowKeys(e)}
 				/>
 			</div>
 

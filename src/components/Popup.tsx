@@ -7,7 +7,7 @@ import React from 'react'
 const Popup = ({ children }: Props) => {
 	return (
 		<div>
-			<p>{children}</p>
+			<div>{children}</div>
 		</div>
 	)
 }

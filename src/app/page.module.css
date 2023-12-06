@@ -1,8 +1,12 @@
-.header {
+/* .header {
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-start;
 	gap: 4rem;
+} */
+
+.header {
+	margin-bottom: 1rem;
 }
 
 .checkbox[type='checkbox'] {
@@ -28,8 +32,14 @@
 	outline: none;
 }
 
+.labelModeCheckbox {
+	font-weight: 500;
+	font-size: 14px;
+	margin-right: 0.8rem;
+}
+
 .label {
-	font-weight: 900;
+	font-weight: 700;
 	margin-right: 0.8rem;
 }
 
@@ -42,6 +52,15 @@
 	border: none;
 	cursor: pointer;
 }
+
+.clearLsBtn {
+	background-color: rgb(205, 202, 202);
+	border: none;
+	padding: 0.4rem;
+	border-radius: 5px;
+	margin-top: 1rem;
+}
+
 .dataResult {
 	margin-top: 5px;
 	width: 300px;

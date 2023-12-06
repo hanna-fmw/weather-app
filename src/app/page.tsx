@@ -8,9 +8,6 @@ import React, { useState, useEffect } from 'react'
 // import plusSign from '../../public/plusSign.png'
 import { useDebouncedCallback } from 'use-debounce'
 import Popup from '@/components/Popup'
-import { FaRegMoon } from 'react-icons/fa'
-import { FaRegSun } from 'react-icons/fa'
-import { getFontOverrideCss } from 'next/dist/server/font-utils'
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY
 
@@ -53,7 +50,13 @@ const searchCity = async (cityName: string) => {
 
 export default function Home() {
 	const [enteredCity, setEnteredCity] = useState<string>('')
+	// const [weatherList, setWeatherList] = useState<NewWeatherItem[]>(() => {
+	// 	const storedItems = localStorage.getItem('weatherList')
+	// 	const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
+	// 	return storedItemsArray
+	// })
 	const [weatherList, setWeatherList] = useState<NewWeatherItem[]>([])
+
 	const [weatherData, setWeatherData] = useState<null | WeatherData>(null)
 	const [isCityNotFound, setIsCityNotFound] = useState<boolean>(false)
 
@@ -65,17 +68,34 @@ export default function Home() {
 	//Keep track of active item in suggestion list array
 	const [activeItem, setActiveItem] = useState(-1)
 
-	// const getWeatherList = JSON.parse(localStorage.getItem('weatherItemAdded'))
+	//ADD WEATHERLIST ARRAY TO LOCAL STORAGE
+	useEffect(() => {
+		if (weatherList.length !== 0) {
+			localStorage.setItem('weatherList', JSON.stringify(weatherList))
+		}
+		console.log('weather list in useEffect', weatherList)
+	}, [weatherList])
+
+	//RETRIEVE FROM LOCAL STORAGE
+	useEffect(() => {
+		const storedItems = localStorage.getItem('weatherList')
+		const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
+		setWeatherList(storedItemsArray)
+	}, [])
+
 	useEffect(() => {
 		if (weatherData && weatherData.location && weatherData.location.name && weatherData.location.country) {
-			console.log('fdfdfdf')
 			addCity()
 		} else {
-			console.log('dsdada')
+			console.log('oops')
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [weatherData])
+
+	//CLEAR LOCAL STORAGE
+	const clearLocalStorage = () => {
+		localStorage.clear()
+	}
 
 	const handleOnChange = (value: string) => {
 		setEnteredCity(value)
@@ -95,7 +115,7 @@ export default function Home() {
 	}
 
 	//Fetch from "current" endbpoint  and pass in id from Search API response
-	const getCurrentWeather = async (cityId: any) => {
+	const getCurrentWeather = async (cityId: number | undefined) => {
 		try {
 			const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${cityId}`)
 			const data = await res.json()
@@ -144,18 +164,21 @@ export default function Home() {
 
 	//ADD CITY
 	const addCity = () => {
-		weatherData &&
-			setWeatherList([
-				...weatherList,
-				{
-					id: new Date().getTime().toString(),
-					cityName: weatherData.location.name,
-					country: weatherData.location.country,
-					temperature: weatherData.current.temp_c,
-					currCondition: weatherData.current.condition.text,
-				},
-			])
-		// localStorage.setItem('weatherItemAdded', JSON.stringify([...weatherList, newWeatherItem]))
+		const newWeatherItem = {
+			id: new Date().getTime().toString(),
+			cityName: weatherData?.location.name,
+			country: weatherData?.location.country,
+			temperature: weatherData?.current.temp_c,
+			currCondition: weatherData?.current.condition.text,
+		}
+		// weatherData &&
+		const updatedWeatherList = [...weatherList, newWeatherItem]
+		setWeatherList(updatedWeatherList)
+		localStorage.setItem('weatherList', JSON.stringify(updatedWeatherList))
+
+		// //Retrieve from local storage
+		// const storedItems = localStorage.getItem('weatherList')
+		// const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
 	}
 
 	//DELETE CITY
@@ -167,7 +190,7 @@ export default function Home() {
 	}
 
 	/////////////////////FUNKAR MIN EGEN//////////////////////////////
-	// const handleArrowKeys = (e: React.KeyboardEvent<HTMLInputElement>, id: any) => {
+	// const handleKeyNavigation = (e: React.KeyboardEvent<HTMLInputElement>, id: any) => {
 	// 	if (e.key === 'ArrowDown' && activeItem < cityItems.length - 1) {
 	// 		setActiveItem((prev) => prev + 1)
 	// 	} else if (e.key === 'ArrowUp' && activeItem > 0) {
@@ -192,11 +215,51 @@ export default function Home() {
 	// }
 	/////////////////////SLUT - FUNKAR MIN EGEN//////////////////////////////
 
-	//HANDLE KEY NAVIGATION (ARROWS & ENTER)
-	//Array.isArray(cityItems) to check that this is an array (to avoid "some is not a function" error)
-	const handleArrowKeys = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		const cityFound = Array.isArray(cityItems) && cityItems.some((item) => item.name?.toLowerCase().includes(enteredCity.toLowerCase()))
+	// //HANDLE KEY NAVIGATION (ARROWS & ENTER)
+	// //Array.isArray(cityItems) to check that this is an array (to avoid "some is not a function" error)
+	// const handleKeyNavigation = (e: React.KeyboardEvent<HTMLInputElement>) => {
+	// 	const cityFound = Array.isArray(cityItems) && cityItems.some((item) => item.name?.toLowerCase().includes(enteredCity.toLowerCase()))
 
+	// 	switch (e.key) {
+	// 		case 'ArrowDown':
+	// 			Array.isArray(cityItems) && activeItem < cityItems.length - 1 && setActiveItem((prev) => prev + 1)
+	// 			break
+
+	// 		case 'ArrowUp':
+	// 			activeItem > 0 && setActiveItem((prev) => prev - 1)
+	// 			break
+
+	// 		case 'Enter':
+	// 			switch (true) {
+	// 				case !enteredCity:
+	// 					timeoutNoInput()
+	// 					break
+
+	// 				case !cityFound:
+	// 					timeoutCityNotFoundString()
+	// 					break
+
+	// 				case activeItem >= 0:
+	// 					Array.isArray(cityItems) && getCurrentWeather(cityItems[activeItem]?.id)
+	// 					break
+
+	// 				case Array.isArray(cityItems) && cityItems.length === 1:
+	// 					Array.isArray(cityItems) && getCurrentWeather(cityItems[0]?.id)
+	// 					break
+
+	// 				default:
+	// 					break
+	// 			}
+	// 			break
+
+	// 		default:
+	// 			break
+	// 	}
+	// }
+
+	// //HANDLE KEY NAVIGATION (ARROWS & ENTER)
+	// //Array.isArray(cityItems) to check that this is an array (to avoid "some is not a function" error)
+	const handleKeyNavigation = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		switch (e.key) {
 			case 'ArrowDown':
 				Array.isArray(cityItems) && activeItem < cityItems.length - 1 && setActiveItem((prev) => prev + 1)
@@ -207,26 +270,7 @@ export default function Home() {
 				break
 
 			case 'Enter':
-				switch (true) {
-					case !enteredCity:
-						timeoutNoInput()
-						break
-
-					case !cityFound:
-						timeoutCityNotFoundString()
-						break
-
-					case activeItem >= 0:
-						Array.isArray(cityItems) && getCurrentWeather(cityItems[activeItem]?.id)
-						break
-
-					case Array.isArray(cityItems) && cityItems.length === 1:
-						Array.isArray(cityItems) && getCurrentWeather(cityItems[0]?.id)
-						break
-
-					default:
-						break
-				}
+				handleEnterKey()
 				break
 
 			default:
@@ -234,49 +278,43 @@ export default function Home() {
 		}
 	}
 
-	//////////////////FUNKAR chat-gpt/////////////////////
-	// const handleArrowKeys = (e: React.KeyboardEvent<HTMLInputElement>, id: any) => {
-	// 	// Check if entered city exists; show not found string if response does not contain enteredCity
-	// 	const cityFound = cityItems.some((item) => item.name?.toLowerCase().includes(enteredCity.toLowerCase()));
+	const handleEnterKey = () => {
+		const cityFound = Array.isArray(cityItems) && cityItems.some((item) => item.name?.toLowerCase().includes(enteredCity.toLowerCase()))
 
-	// 	switch (e.key) {
-	// 	  case 'ArrowDown':
-	// 		setActiveItem((prev) => (prev < cityItems.length - 1 ? prev + 1 : prev));
-	// 		break;
+		if (!enteredCity) {
+			timeoutNoInput()
+			return
+		}
 
-	// 	  case 'ArrowUp':
-	// 		setActiveItem((prev) => (prev > 0 ? prev - 1 : prev));
-	// 		break;
+		if (!cityFound) {
+			timeoutCityNotFoundString()
+			return
+		}
 
-	// 	  case 'Enter':
-	// 		handleEnterKey();
-	// 		break;
+		if (activeItem >= 0) {
+			Array.isArray(cityItems) && getCurrentWeather(cityItems[activeItem]?.id)
+			return
+		}
 
-	// 	  default:
-	// 		break;
-	// 	}
-
-	// 	function handleEnterKey() {
-	// 	  if (!enteredCity) {
-	// 		timeoutNoInput();
-	// 	  } else {
-	// 		if (!cityFound) {
-	// 		  timeoutCityNotFoundString();
-	// 		} else if (activeItem >= 0) {
-	// 		  getCurrentWeather(cityItems[activeItem]?.id);
-	// 		} else if (cityItems.length === 1) {
-	// 		  getCurrentWeather(cityItems[0]?.id);
-	// 		}
-	// 	  }
-	// 	}
-	//   };
-	//////////////////FUNKAR chat-gpt/////////////////////
+		if (Array.isArray(cityItems) && cityItems.length === 1) {
+			Array.isArray(cityItems) && getCurrentWeather(cityItems[0]?.id)
+			return
+		}
+	}
 
 	return (
 		<main className={styles.main}>
 			<div className={styles.header}>
 				<h1 className={styles.h1}>Hur är vädret i ...</h1>
-				<input type='checkbox' className={styles.checkbox} />
+				<div>
+					<label htmlFor='checkbox' className={styles.labelModeCheckbox}>
+						Toggle dark/light mode
+					</label>
+					<input name='checkbox' type='checkbox' className={styles.checkbox} />
+				</div>
+				<button onClick={clearLocalStorage} className={styles.clearLsBtn}>
+					Clear Local Storage
+				</button>
 			</div>
 
 			<div className={styles.inputContainer}>
@@ -290,7 +328,7 @@ export default function Home() {
 					onChange={(e) => handleOnChange(e.target.value)}
 					value={enteredCity}
 					autoComplete='off'
-					onKeyDown={(e) => handleArrowKeys(e)}
+					onKeyDown={(e) => handleKeyNavigation(e)}
 				/>
 			</div>
 
@@ -332,7 +370,7 @@ export default function Home() {
 
 			<div className={styles.container}>
 				{' '}
-				{weatherData &&
+				{weatherList &&
 					weatherList.sort((a, b) => (a.temperature && b.temperature ? a.temperature - b.temperature : 0)) &&
 					weatherList.map((item, i) => (
 						<div key={i}>

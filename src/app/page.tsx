@@ -50,11 +50,7 @@ const searchCity = async (cityName: string) => {
 
 export default function Home() {
 	const [enteredCity, setEnteredCity] = useState<string>('')
-	// const [weatherList, setWeatherList] = useState<NewWeatherItem[]>(() => {
-	// 	const storedItems = localStorage.getItem('weatherList')
-	// 	const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
-	// 	return storedItemsArray
-	// })
+
 	const [weatherList, setWeatherList] = useState<NewWeatherItem[]>([])
 
 	const [weatherData, setWeatherData] = useState<null | WeatherData>(null)
@@ -68,31 +64,100 @@ export default function Home() {
 	//Keep track of active item in suggestion list array
 	const [activeItem, setActiveItem] = useState(-1)
 
-	//ADD WEATHERLIST ARRAY TO LOCAL STORAGE
-	useEffect(() => {
-		if (weatherList.length !== 0) {
-			localStorage.setItem('weatherList', JSON.stringify(weatherList))
-		}
-		console.log('weather list in useEffect', weatherList)
-	}, [weatherList])
+	//Already added
+	const [isAlreadyAdded, setIsAlreadyAdded] = useState<boolean>(false)
 
 	//RETRIEVE FROM LOCAL STORAGE
 	useEffect(() => {
 		const storedItems = localStorage.getItem('weatherList')
 		const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
+		console.log('Stored Items Array', storedItemsArray)
 		setWeatherList(storedItemsArray)
 	}, [])
+
+	//Add weatherList array to local storage>ADD WEATHERLIST ARRAY TO LOCAL STORAGE
+	useEffect(() => {
+		if (weatherList.length !== 0) {
+			const updatedWeatherList = weatherList.sort((a, b) => (a.temperature && b.temperature ? a.temperature - b.temperature : 0))
+			setWeatherList(updatedWeatherList)
+			localStorage.setItem('weatherList', JSON.stringify(weatherList))
+		}
+	}, [weatherList])
+
+	// Add event listener for beforeunload and unload
+	useEffect(() => {
+		const handleBeforeUnload = () => {
+			// Update local storage with the latest temperatures
+			localStorage.setItem('weatherList', JSON.stringify(weatherList))
+		}
+
+		const handleUnload = async () => {
+			// Retrieve the latest data before the page is unloaded
+			// Fetch the latest data for each city from the API
+			const promises = weatherList.map(async (item) => {
+				try {
+					const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${item.cityName},${item.country}`)
+					const data = await res.json()
+
+					if (
+						data &&
+						data.location &&
+						data.location.name &&
+						data.location.country &&
+						data.current &&
+						data.current.temp_c !== undefined &&
+						data.current.temp_c !== null &&
+						data.current.condition &&
+						data.current.condition.text
+					) {
+						return {
+							...item,
+							temperature: data.current.temp_c,
+							currCondition: data.current.condition.text,
+						}
+					} else {
+						console.error('Invalid data structure for the city:', data)
+						return item // Return the original item if the data is invalid
+					}
+				} catch (error) {
+					console.error('Error:', error)
+					return item // Return the original item if there's an error
+				}
+			})
+
+			try {
+				const updatedWeatherList = await Promise.all(promises)
+
+				// Update the state with the latest data
+				setWeatherList(updatedWeatherList)
+
+				// Update local storage with the latest temperatures
+				localStorage.setItem('weatherList', JSON.stringify(updatedWeatherList))
+			} catch (error) {
+				console.error('Error updating weather data:', error)
+			}
+		}
+
+		window.addEventListener('beforeunload', handleBeforeUnload)
+		window.addEventListener('unload', handleUnload)
+
+		// Remove event listeners on component unmount
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload)
+			window.removeEventListener('unload', handleUnload)
+		}
+	}, [weatherList])
 
 	useEffect(() => {
 		if (weatherData && weatherData.location && weatherData.location.name && weatherData.location.country) {
 			addCity()
 		} else {
-			console.log('oops')
+			// console.log('oops')
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [weatherData])
 
-	//CLEAR LOCAL STORAGE
+	//Clear Local Storage
 	const clearLocalStorage = () => {
 		localStorage.clear()
 	}
@@ -114,33 +179,43 @@ export default function Home() {
 		setActiveItem(0)
 	}
 
-	//Fetch from "current" endbpoint  and pass in id from Search API response
-	const getCurrentWeather = async (cityId: number | undefined) => {
-		try {
-			const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${cityId}`)
-			const data = await res.json()
+	//Fetch from "current" endpoint and pass in id from Search API response
+	const getCurrentWeather = async (cityObject: any) => {
+		console.log('city object', cityObject)
 
-			if (
-				data &&
-				data.location &&
-				data.location.name &&
-				data.location.country &&
-				data.current &&
-				data.current.temp_c !== undefined &&
-				data.current.temp_c !== null &&
-				data.current.condition &&
-				data.current.condition.text
-			) {
-				setWeatherData(data)
-				setEnteredCity('')
-				setCityItems([])
-			} else {
-				console.error('Invalid data structure for the city:', data)
+		console.log(cityItems)
+		const alreadyAdded = weatherList.some((weatherItem) => weatherItem.cityName === cityObject.name && weatherItem.country === cityObject.country)
+		if (alreadyAdded) {
+			timeoutAlreadyAdded()
+			setCityItems([])
+		} else {
+			try {
+				const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${cityObject.id}`)
+
+				const data = await res.json()
+
+				if (
+					data &&
+					data.location &&
+					data.location.name &&
+					data.location.country &&
+					data.current &&
+					data.current.temp_c !== undefined &&
+					data.current.temp_c !== null &&
+					data.current.condition &&
+					data.current.condition.text
+				) {
+					setWeatherData(data)
+					setEnteredCity('')
+					setCityItems([])
+				} else {
+					console.error('Invalid data structure for the city:', data)
+				}
+				console.log(data)
+				return data
+			} catch (error) {
+				console.error('Error:', error)
 			}
-
-			return data
-		} catch (error) {
-			console.error('Error:', error)
 		}
 	}
 
@@ -162,6 +237,15 @@ export default function Home() {
 		setEnteredCity('')
 	}
 
+	//SHOW/HIDE CITY NOT FOUND WARNING
+	const timeoutAlreadyAdded = () => {
+		setIsAlreadyAdded(true)
+		setTimeout(() => {
+			setIsAlreadyAdded(false)
+		}, 2000)
+		setEnteredCity('')
+	}
+
 	//ADD CITY
 	const addCity = () => {
 		const newWeatherItem = {
@@ -172,90 +256,18 @@ export default function Home() {
 			currCondition: weatherData?.current.condition.text,
 		}
 		// weatherData &&
+
 		const updatedWeatherList = [...weatherList, newWeatherItem]
 		setWeatherList(updatedWeatherList)
 		localStorage.setItem('weatherList', JSON.stringify(updatedWeatherList))
-
-		// //Retrieve from local storage
-		// const storedItems = localStorage.getItem('weatherList')
-		// const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
 	}
 
 	//DELETE CITY
 	const deleteCity = (id: string) => {
 		const updatedList = [...weatherList].filter((item) => item.id !== id)
 		setWeatherList(updatedList)
-		// localStorage.setItem('weatherItemAdded', JSON.stringify(updatedList))
 		return updatedList
 	}
-
-	/////////////////////FUNKAR MIN EGEN//////////////////////////////
-	// const handleKeyNavigation = (e: React.KeyboardEvent<HTMLInputElement>, id: any) => {
-	// 	if (e.key === 'ArrowDown' && activeItem < cityItems.length - 1) {
-	// 		setActiveItem((prev) => prev + 1)
-	// 	} else if (e.key === 'ArrowUp' && activeItem > 0) {
-	// 		setActiveItem((prev) => prev - 1)
-	// 	} else if (e.key === 'Enter') {
-	// 		//If empty input field
-	// 		if (!enteredCity) {
-	// 			timeoutNoInput()
-	// 			// alert('Du måste ange en stad')
-	// 		} else {
-	// 			//Check if entered city exists; show not found string if response does not contain enteredCity
-	// 			const cityFound = cityItems.some((item) => item.name?.toLowerCase().includes(enteredCity.toLowerCase()))
-	// 			if (!cityFound) {
-	// 				timeoutCityNotFoundString()
-	// 			} else if (activeItem >= 0) {
-	// 				getCurrentWeather(cityItems[activeItem]?.id)
-	// 			} else if (cityItems.length === 1) {
-	// 				getCurrentWeather(cityItems[0]?.id)
-	// 			}
-	// 		}
-	// 	}
-	// }
-	/////////////////////SLUT - FUNKAR MIN EGEN//////////////////////////////
-
-	// //HANDLE KEY NAVIGATION (ARROWS & ENTER)
-	// //Array.isArray(cityItems) to check that this is an array (to avoid "some is not a function" error)
-	// const handleKeyNavigation = (e: React.KeyboardEvent<HTMLInputElement>) => {
-	// 	const cityFound = Array.isArray(cityItems) && cityItems.some((item) => item.name?.toLowerCase().includes(enteredCity.toLowerCase()))
-
-	// 	switch (e.key) {
-	// 		case 'ArrowDown':
-	// 			Array.isArray(cityItems) && activeItem < cityItems.length - 1 && setActiveItem((prev) => prev + 1)
-	// 			break
-
-	// 		case 'ArrowUp':
-	// 			activeItem > 0 && setActiveItem((prev) => prev - 1)
-	// 			break
-
-	// 		case 'Enter':
-	// 			switch (true) {
-	// 				case !enteredCity:
-	// 					timeoutNoInput()
-	// 					break
-
-	// 				case !cityFound:
-	// 					timeoutCityNotFoundString()
-	// 					break
-
-	// 				case activeItem >= 0:
-	// 					Array.isArray(cityItems) && getCurrentWeather(cityItems[activeItem]?.id)
-	// 					break
-
-	// 				case Array.isArray(cityItems) && cityItems.length === 1:
-	// 					Array.isArray(cityItems) && getCurrentWeather(cityItems[0]?.id)
-	// 					break
-
-	// 				default:
-	// 					break
-	// 			}
-	// 			break
-
-	// 		default:
-	// 			break
-	// 	}
-	// }
 
 	// //HANDLE KEY NAVIGATION (ARROWS & ENTER)
 	// //Array.isArray(cityItems) to check that this is an array (to avoid "some is not a function" error)
@@ -292,15 +304,27 @@ export default function Home() {
 		}
 
 		if (activeItem >= 0) {
-			Array.isArray(cityItems) && getCurrentWeather(cityItems[activeItem]?.id)
+			Array.isArray(cityItems) && getCurrentWeather(cityItems[activeItem])
 			return
 		}
 
 		if (Array.isArray(cityItems) && cityItems.length === 1) {
-			Array.isArray(cityItems) && getCurrentWeather(cityItems[0]?.id)
+			Array.isArray(cityItems) && getCurrentWeather(cityItems[0])
 			return
 		}
 	}
+
+	//Find existing (filtrerar fram det objekt i weatherList som finns i cityItems-arrayen, dvs. returnerar el-objektet)
+	// const checkAlreadyAdded = (weatherList, cityItems) => {
+	// 	const alreadyAdded = cityItems.some((cityItem) =>
+	// 		weatherList.some((weatherItem) => weatherItem.cityName === cityItem.name && weatherItem.country === cityItem.country)
+	// 	)
+	// 	if (alreadyAdded) {
+	// 		timeoutAlreadyAdded()
+	// 		setCityItems([])
+	// 		return
+	// 	}
+	// }
 
 	return (
 		<main className={styles.main}>
@@ -348,18 +372,26 @@ export default function Home() {
 				''
 			)}
 
+			{isAlreadyAdded ? (
+				<Popup>
+					<div>Staden har redan lagts till</div>
+				</Popup>
+			) : (
+				''
+			)}
+
 			<div className={styles.dataresult}>
 				{Array.isArray(cityItems) ? (
 					cityItems.map((item, i) => (
 						<div
 							key={i}
-							onClick={() => getCurrentWeather(item?.id)}
+							onClick={() => getCurrentWeather(item)}
 							className={`${activeItem === i ? `${styles.searchListItem} ${styles.active}` : styles.searchListItem}`}>
 							<span>{item?.name} </span>(<span>{item?.country}</span>)
 						</div>
 					))
 				) : (
-					<div onClick={() => getCurrentWeather(cityItems?.id)}>
+					<div onClick={() => getCurrentWeather(cityItems)}>
 						<span>{cityItems?.name}</span>
 						<span>{cityItems?.country}</span>
 						<span>{cityItems?.id}</span>
@@ -370,8 +402,9 @@ export default function Home() {
 
 			<div className={styles.container}>
 				{' '}
+				{/* Stod weatherData först och då renderades inte local storage förrän jag lagt till en ny stad. Allt rätt
+				när ändrade till weatherList */}
 				{weatherList &&
-					weatherList.sort((a, b) => (a.temperature && b.temperature ? a.temperature - b.temperature : 0)) &&
 					weatherList.map((item, i) => (
 						<div key={i}>
 							{

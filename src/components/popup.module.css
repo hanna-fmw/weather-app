@@ -1,0 +1,7 @@
+.popupMsg {
+	background-color: rgb(135, 160, 139);
+	color: white;
+	font-weight: 500;
+	padding: 0.8rem;
+	margin-block: 1rem;
+}

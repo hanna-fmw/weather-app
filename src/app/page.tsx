@@ -70,81 +70,33 @@ export default function Home() {
 	//RETRIEVE FROM LOCAL STORAGE
 	useEffect(() => {
 		const storedItems = localStorage.getItem('weatherList')
-		const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
-		console.log('Stored Items Array', storedItemsArray)
-		setWeatherList(storedItemsArray)
+		const storedItemsObject = storedItems ? JSON.parse(storedItems) : { value: [], expDate: 0 }
+		setWeatherList(storedItemsObject.value)
+		console.log('Stored Items Array', storedItemsObject.value)
 	}, [])
 
-	//Add weatherList array to local storage>ADD WEATHERLIST ARRAY TO LOCAL STORAGE
+	//Add weatherList array to local storage
 	useEffect(() => {
 		if (weatherList.length !== 0) {
+			//Expire 30 days
+			// const expirationDate = new Date().setDate(new Date().getDate() + 30)
+			//Expire 1 sek
+			const expirationDate = new Date().getTime() + 1000
+			console.log(expirationDate)
+			//Formaterat datum
+			console.log(new Date(expirationDate))
+
 			const updatedWeatherList = weatherList.sort((a, b) => (a.temperature && b.temperature ? a.temperature - b.temperature : 0))
 			setWeatherList(updatedWeatherList)
-			localStorage.setItem('weatherList', JSON.stringify(weatherList))
-		}
-	}, [weatherList])
-
-	// Add event listener for beforeunload and unload
-	useEffect(() => {
-		const handleBeforeUnload = () => {
-			// Update local storage with the latest temperatures
-			localStorage.setItem('weatherList', JSON.stringify(weatherList))
-		}
-
-		const handleUnload = async () => {
-			// Retrieve the latest data before the page is unloaded
-			// Fetch the latest data for each city from the API
-			const promises = weatherList.map(async (item) => {
-				try {
-					const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${item.cityName},${item.country}`)
-					const data = await res.json()
-
-					if (
-						data &&
-						data.location &&
-						data.location.name &&
-						data.location.country &&
-						data.current &&
-						data.current.temp_c !== undefined &&
-						data.current.temp_c !== null &&
-						data.current.condition &&
-						data.current.condition.text
-					) {
-						return {
-							...item,
-							temperature: data.current.temp_c,
-							currCondition: data.current.condition.text,
-						}
-					} else {
-						console.error('Invalid data structure for the city:', data)
-						return item // Return the original item if the data is invalid
-					}
-				} catch (error) {
-					console.error('Error:', error)
-					return item // Return the original item if there's an error
-				}
-			})
-
-			try {
-				const updatedWeatherList = await Promise.all(promises)
-
-				// Update the state with the latest data
-				setWeatherList(updatedWeatherList)
-
-				// Update local storage with the latest temperatures
-				localStorage.setItem('weatherList', JSON.stringify(updatedWeatherList))
-			} catch (error) {
-				console.error('Error updating weather data:', error)
-			}
-		}
-
-		window.addEventListener('beforeunload', handleBeforeUnload)
-		window.addEventListener('unload', handleUnload)
-
-		// Remove event listeners on component unmount
-		return () => {
-			window.removeEventListener('beforeunload', handleBeforeUnload)
-			window.removeEventListener('unload', handleUnload)
+			console.log('Weather List', weatherList)
+			// localStorage.setItem('weatherList', JSON.stringify(weatherList))
+			localStorage.setItem(
+				'weatherList',
+				JSON.stringify({
+					value: weatherList,
+					expDate: expirationDate,
+				})
+			)
 		}
 	}, [weatherList])
 
@@ -183,7 +135,7 @@ export default function Home() {
 	const getCurrentWeather = async (cityObject: any) => {
 		console.log('city object', cityObject)
 
-		console.log(cityItems)
+		console.log('cityItems', cityItems)
 		const alreadyAdded = weatherList.some((weatherItem) => weatherItem.cityName === cityObject.name && weatherItem.country === cityObject.country)
 		if (alreadyAdded) {
 			timeoutAlreadyAdded()
@@ -191,7 +143,6 @@ export default function Home() {
 		} else {
 			try {
 				const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${cityObject.id}`)
-
 				const data = await res.json()
 
 				if (
@@ -211,7 +162,7 @@ export default function Home() {
 				} else {
 					console.error('Invalid data structure for the city:', data)
 				}
-				console.log(data)
+
 				return data
 			} catch (error) {
 				console.error('Error:', error)
@@ -255,8 +206,8 @@ export default function Home() {
 			temperature: weatherData?.current.temp_c,
 			currCondition: weatherData?.current.condition.text,
 		}
-		// weatherData &&
 
+		//Update weather list with new weather item + save to local storage
 		const updatedWeatherList = [...weatherList, newWeatherItem]
 		setWeatherList(updatedWeatherList)
 		localStorage.setItem('weatherList', JSON.stringify(updatedWeatherList))
@@ -401,23 +352,24 @@ export default function Home() {
 			{/* <div>{Array.isArray(cityItems) ? cityItems.map((item, i) => <div key={i}>{item?.name}</div>) : <div>{cityItems?.name}</div>}</div> */}
 
 			<div className={styles.container}>
-				{' '}
 				{/* Stod weatherData först och då renderades inte local storage förrän jag lagt till en ny stad. Allt rätt
 				när ändrade till weatherList */}
 				{weatherList &&
-					weatherList.map((item, i) => (
-						<div key={i}>
-							{
-								<WeatherCard
-									cityName={item.cityName}
-									temperature={item.temperature}
-									currCondition={item.currCondition}
-									country={item.country}
-									deleteCity={() => deleteCity(item.id)}
-								/>
-							}
-						</div>
-					))}
+					weatherList.map((item, i) => {
+						return (
+							<div key={i}>
+								{
+									<WeatherCard
+										cityName={item.cityName}
+										temperature={item.temperature}
+										currCondition={item.currCondition}
+										country={item.country}
+										deleteCity={() => deleteCity(item.id)}
+									/>
+								}
+							</div>
+						)
+					})}
 			</div>
 			<footer className={styles.footer}>
 				<Image src={logoAlster} width={30} height={30} alt='Alster Logotype' className={styles.logoAlster} />

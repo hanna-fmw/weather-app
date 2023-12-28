@@ -18,14 +18,16 @@
 	padding: 20px 30px;
 	align-items: center;
 	border-radius: 5px;
-	max-width: fit-content;
-	background-color: white;
+	/* max-width: fit-content; */
+	background-color: rgb(50, 48, 48, 0.4);
 	margin-bottom: 0.8rem;
 	position: relative;
 }
 
 .inputField {
-	border: none;
+	border: 1px black solid;
+	padding: 1rem;
+	background-color: rgb(50, 48, 48, 0.4);
 }
 
 .inputField:focus {
@@ -43,29 +45,21 @@
 	margin-right: 0.8rem;
 }
 
-.logoAlster {
+/* .logoAlster {
 	margin-top: 2rem;
-}
+} */
 
-.btn {
+/* .btn {
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
-}
-
-.clearLsBtn {
-	background-color: rgb(205, 202, 202);
-	border: none;
-	padding: 0.4rem;
-	border-radius: 5px;
-	margin-top: 1rem;
-}
+} */
 
 .dataResult {
 	margin-top: 5px;
 	width: 300px;
 	height: 200px;
-	background-color: rgb(255, 255, 255);
+	background-color: rgb(200, 200, 200);
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 	overflow: hidden;
 	overflow-y: auto;
@@ -100,11 +94,40 @@
 	background: lightgrey;
 }
 
-/* Desktop */
-@media (min-width: 701px) {
-	.container {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 2rem;
-	}
+.bannerContainer {
+	display: flex;
+	flex-direction: row;
+	gap: 4rem;
+	/* width: calc(100vw - 1 * 1rem); */
 }
+/* width: calc(100vw - /* sum of padding, margins, and borders */
+
+.bannerCity {
+	/* white-space: nowrap; */
+	/* border: 1px solid black; */
+	padding: 0.5rem;
+	background-color: rgb(50, 48, 48, 0.4);
+}
+
+.main {
+	/* background-color: rgb(154, 201, 123); */
+	width: 100vw;
+	display: flex;}
+
+.layout {
+	flex: 1 0 auto;
+}
+/* flex-grow: 1 = can grow to take up available space if any
+flex-shrink: 0 = will shrink at a rate of 0 compared to other flex items
+if there is not enough space
+flex-basis: auto = the default size is determined by size of content
+*/
+
+/* Desktop */
+/* @media (min-width: 701px) {
+	.main {
+		display: grid;
+		grid-template-columns: 2fr, 1fr;
+		width: 100vw;
+	}
+} */

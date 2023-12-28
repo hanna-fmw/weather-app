@@ -385,7 +385,7 @@ export default function Home() {
 
 	return (
 		<>
-			<footer className={styles.footer}>
+			<header className={styles.header}>
 				{/* <Image src={logoAlster} width={30} height={30} alt='Alster Logotype' className={styles.logoAlster} /> */}
 
 				<motion.div className={styles.bannerContainer} variants={marqueeVariants} animate='animate'>
@@ -393,11 +393,11 @@ export default function Home() {
 						<div key={i} className={styles.bannerCity}>
 							<div>{city.location.name}&nbsp;</div>
 							<div>{city.current.temp_c}°C</div>
-							<img src={city.current.condition.icon} alt={`Weather icon for ${city.location.name}`} />
+							<Image src={city.current.condition.icon} width={30} height={30} alt={`Weather icon for ${city.location.name}`} />
 						</div>
 					))}
 				</motion.div>
-			</footer>
+			</header>
 			<main className={styles.main}>
 				{/* <div className={styles.header}>
 				<h1 className={styles.h1}>Hur är vädret i ...</h1>

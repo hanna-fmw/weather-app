@@ -5,9 +5,9 @@
 	gap: 4rem;
 } */
 
-.header {
+/* .header {
 	margin-bottom: 1rem;
-}
+} */
 
 .checkbox[type='checkbox'] {
 	accent-color: #808080;
@@ -95,6 +95,7 @@
 }
 
 .bannerContainer {
+	/* width: 100vw; */
 	display: flex;
 	flex-direction: row;
 	gap: 4rem;
@@ -111,12 +112,14 @@
 
 .main {
 	/* background-color: rgb(154, 201, 123); */
-	width: 100vw;
-	display: flex;}
+	/* width: 100vw; */
+	display: flex;
+}
 
 .layout {
 	flex: 1 0 auto;
 }
+
 /* flex-grow: 1 = can grow to take up available space if any
 flex-shrink: 0 = will shrink at a rate of 0 compared to other flex items
 if there is not enough space

@@ -1,4 +1,6 @@
 'use client'
+import sun from '../../public/bgImages/day/sun.jpg'
+import sunnyIcon from '../../public/icons/day/113.png'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import styles from './page.module.css'
@@ -9,7 +11,6 @@ import React, { useState, useEffect } from 'react'
 // import plusSign from '../../public/plusSign.png'
 import { useDebouncedCallback } from 'use-debounce'
 import Popup from '@/components/Popup'
-import Navbar from '@/components/Navbar'
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY
 
@@ -20,6 +21,7 @@ type WeatherData = {
 	}
 	current: {
 		temp_c: number
+		is_day: number
 		condition: {
 			text: string
 		}
@@ -32,6 +34,7 @@ type NewWeatherItem = {
 	temperature?: number
 	currCondition?: string
 	country?: string
+	isDay?: number
 }
 
 type CityItem = {
@@ -72,7 +75,7 @@ export default function Home() {
 	const [weatherData, setWeatherData] = useState<null | WeatherData>(null)
 	const [isCityNotFound, setIsCityNotFound] = useState<boolean>(false)
 
-	const [inputFieldEmptyPopup, setIsInputFieldEmptyPopup] = useState<boolean>(false)
+	const [isInputEmpty, setIsInputEmpty] = useState<boolean>(false)
 
 	//Suggestion List (from Search API)
 	const [cityItems, setCityItems] = useState<CityItem[] | CityItem>([])
@@ -227,7 +230,9 @@ export default function Home() {
 					data.current.temp_c !== undefined &&
 					data.current.temp_c !== null &&
 					data.current.condition &&
-					data.current.condition.text
+					data.current.condition.text &&
+					data.current.is_day !== undefined &&
+					data.current.is_day !== null
 				) {
 					setWeatherData(data)
 					setEnteredCity('')
@@ -254,9 +259,9 @@ export default function Home() {
 
 	//SHOW/HIDE EMPTY INPUT FIELD WARNING
 	const timeoutNoInput = () => {
-		setIsInputFieldEmptyPopup(true)
+		setIsInputEmpty(true)
 		setTimeout(() => {
-			setIsInputFieldEmptyPopup(false)
+			setIsInputEmpty(false)
 		}, 2000)
 		setEnteredCity('')
 	}
@@ -278,6 +283,7 @@ export default function Home() {
 			country: weatherData?.location.country,
 			temperature: weatherData?.current.temp_c,
 			currCondition: weatherData?.current.condition.text,
+			isDay: weatherData?.current.is_day,
 		}
 
 		//Update local storage after adding new item
@@ -371,51 +377,112 @@ export default function Home() {
 
 	const marqueeVariants = {
 		animate: {
-			x: ['0%', '100%'],
+			y: ['-10vh', '1.5vh'],
 			transition: {
-				x: {
-					repeat: Infinity,
+				y: {
+					// repeat: Infinity,
 					repeatType: 'loop',
-					duration: 10,
+					duration: 2,
 					ease: 'linear',
 				},
 			},
 		},
 	}
 
-	return (
-		<>
-			<header className={styles.header}>
-				{/* <Image src={logoAlster} width={30} height={30} alt='Alster Logotype' className={styles.logoAlster} /> */}
+	//Clear Local Storage
+	const clearLocalStorage = () => {
+		localStorage.clear()
+	}
 
-				<motion.div className={styles.bannerContainer} variants={marqueeVariants} animate='animate'>
-					{bannerCities?.map((city, i) => (
-						<div key={i} className={styles.bannerCity}>
-							<div>{city.location.name}&nbsp;</div>
-							<div>{city.current.temp_c}°C</div>
-							<Image src={city.current.condition.icon} width={30} height={30} alt={`Weather icon for ${city.location.name}`} />
+	// const parentVariants = {
+	// 	animate: {
+	// 		y: ['-10vh', '2vh'],
+	// 		opacity: 1,
+	// 		transition: {
+	// 			when: 'beforeChildren',
+	// 			staggerChildren: 0.5,
+	// 		},
+	// 	},
+	// 	exit: { opacity: 0 }, // Remove transition property from exit
+	// }
+
+	// const childrenVariants = {
+	// 	// initial: { y: -20, opacity: 0 },
+	// 	// animate: { y: 0, opacity: 1, transition: { duration: 2 } },
+	// 	transition: {
+	// 		y: {
+	// 			repeat: Infinity,
+	// 			repeatType: 'loop',
+	// 			duration: 3,
+	// 			ease: 'linear',
+	// 		},
+	// 	},
+	// }
+
+	return (
+		<main className={styles.appWrapper}>
+			<section className={styles.container}>
+				<header className={styles.bannerContainer}>
+					<div className={styles.bannerItems}>
+						{bannerCities?.map((city, i) => (
+							<motion.div key={i} className={styles.bannerCity} variants={marqueeVariants} animate='animate' exit='exit'>
+								<div className={styles.bannerCityName}>{city.location.name}&nbsp;</div>
+								<div className={styles.bannerCityTemp}>{city.current.temp_c}°C</div>
+								<img src={city.current.condition.icon} width={30} height={30} alt={`Weather icon for ${city.location.name}`} className={styles.bannerIcon} />
+								{/* <Image src={city.current.condition.icon} width={30} height={30} alt={`Weather icon for ${city.location.name}`} /> */}
+							</motion.div>
+						))}
+					</div>
+				</header>
+
+				<section className={styles.contentContainer}>
+					<div className={styles.cityDetails}>
+						<h1 className={styles.temp}>16&#176;</h1>
+
+						<div>
+							<h1 className={styles.cityName}>London</h1>
+							<small>
+								<span className={styles.localTime}>07:09 </span>
+								<span className={styles.date}>Monday Sept 10</span>
+							</small>
 						</div>
-					))}
-				</motion.div>
-			</header>
-			<main className={styles.main}>
-				{/* <div className={styles.header}>
-				<h1 className={styles.h1}>Hur är vädret i ...</h1>
-				<div>
-					<label htmlFor='checkbox' className={styles.labelModeCheckbox}>
-						Toggle dark/light mode
-					</label>
-					<input name='checkbox' type='checkbox' className={styles.checkbox} />
-				</div>
-				<button onClick={clearLocalStorage} className={styles.clearLsBtn}>
-					Clear Local Storage
-				</button>
-			</div> */}
-				<section className={styles.layout}>
-					<div className={styles.inputContainer}>
-						<label className={styles.label} htmlFor='search'>
-							City:
+
+						<div>
+							<Image src={sunnyIcon} width={50} height={50} alt={`Weather icon for London`} className={styles.icon} />
+							<div className={styles.weatherDescription}>Cloudy</div>
+						</div>
+
+						<ul className={styles.weatherDetails}>
+							<li className={styles.humidity}>
+								<span>Humidity:</span> <span>85%</span>
+							</li>
+							<li className={styles.cloud}>
+								<span>Cloud:</span> <span>89%</span>
+							</li>
+							<li className={styles.wind}>
+								<span>Wind:</span> <span>8 km/h</span>
+							</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+			<aside className={styles.sidePanel}>
+				<div className={styles.sidePanelHeader}>
+					{/* <div>
+						<label htmlFor='checkbox' className={styles.labelModeCheckbox}>
+							Toggle dark/light mode
 						</label>
+						<input name='checkbox' type='checkbox' className={styles.checkbox} />
+					</div> */}
+
+					<Image src={logoAlster} height={25} width={25} alt='Alster logo' className={styles.logoAlster} />
+				</div>
+				<div className={styles.inputContainer}>
+					<div>
+						{/* <label className={styles.label} htmlFor='search'>
+							City:
+						</label> */}
+
 						<input
 							className={styles.inputField}
 							type='text'
@@ -424,6 +491,7 @@ export default function Home() {
 							value={enteredCity}
 							autoComplete='off'
 							onKeyDown={(e) => handleKeyNavigation(e)}
+							placeholder='Search City...'
 						/>
 					</div>
 
@@ -435,7 +503,7 @@ export default function Home() {
 						''
 					)}
 
-					{inputFieldEmptyPopup ? (
+					{isInputEmpty ? (
 						<Popup>
 							<div>Du måste ange en stad</div>
 						</Popup>
@@ -470,32 +538,36 @@ export default function Home() {
 						)}
 					</div>
 					{/* <div>{Array.isArray(cityItems) ? cityItems.map((item, i) => <div key={i}>{item?.name}</div>) : <div>{cityItems?.name}</div>}</div> */}
+				</div>
 
-					<div className={styles.container}>
-						{/* Stod weatherData först och då renderades inte local storage förrän jag lagt till en ny stad. Allt rätt
-				när ändrade till weatherList */}
-						{weatherList &&
-							weatherList.map((item, i) => {
-								return (
-									<div key={i}>
-										{
-											<WeatherCard
-												cityName={item.cityName}
-												temperature={item.temperature}
-												currCondition={item.currCondition}
-												country={item.country}
-												deleteCity={() => deleteCity(item.id)}
-											/>
-										}
-									</div>
-								)
-							})}
+				<div className={styles.sidePanelCards}>
+					<div className={styles.delAllBtnContainer}>
+						<button onClick={clearLocalStorage} className={styles.delAllBtn}>
+							Delete All Saved
+						</button>
 					</div>
-				</section>
-				<section className={styles.nav}>
-					<Navbar />
-				</section>
-			</main>
-		</>
+					{/* Stod weatherData först och då renderades inte local storage förrän jag lagt till en ny stad. Allt rätt
+				               när ändrade till weatherList */}
+					{weatherList &&
+						weatherList.map((item, i) => {
+							let bgDaySnowy = item.isDay && item.isDay === 1 && item.currCondition && item.currCondition?.toLowerCase().includes('snow')
+							return (
+								<div key={i}>
+									{
+										<WeatherCard
+											cityName={item.cityName}
+											temperature={item.temperature}
+											currCondition={item.currCondition}
+											country={item.country}
+											isDay={item.isDay}
+											deleteCity={() => deleteCity(item.id)}
+										/>
+									}
+								</div>
+							)
+						})}
+				</div>
+			</aside>
+		</main>
 	)
 }

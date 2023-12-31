@@ -1,10 +1,11 @@
 import React from 'react'
 import styles from './weather.module.css'
 import '../app/globals.css'
-import sunny from '../../public/sun.svg'
-import cloudy from '../../public/cloud.svg'
-import snowy from '../../public/snow.svg'
-import fallback from '../../public/fallback.svg'
+import sunny from '../../public/icons/day/113.png'
+import cloudy from '../../public/icons/day/116.png'
+import snowy from '../../public/icons/day/338.png'
+import rainy from '../../public/icons/day/308.png'
+import fallback from '../../public/icons/day/119.png'
 import Image from 'next/image'
 import closeBtn from '../../public/closeBtn.svg'
 
@@ -13,10 +14,11 @@ type City = {
 	temperature?: number
 	currCondition?: string
 	country?: string
+	isDay?: number
 	deleteCity: () => void
 }
 
-const WeatherCard = ({ cityName, temperature, currCondition, deleteCity, country }: City) => {
+const WeatherCard = ({ cityName, temperature, currCondition, deleteCity, country, isDay }: City) => {
 	// console.log(currCondition)
 	//Background colors
 	const highTemp = temperature && temperature > 19
@@ -27,40 +29,32 @@ const WeatherCard = ({ cityName, temperature, currCondition, deleteCity, country
 	return (
 		<div className={`${highTemp ? styles.bgHighTemp : lowTempOrRain ? styles.bgLowTemp : styles.bgModerateTemp} ${styles.card}`}>
 			<div className={styles.closeBtn}>
-				<Image src={closeBtn} width={30} height={30} alt='Close Button' onClick={deleteCity} />
+				<Image src={closeBtn} width={20} height={20} alt='Close Button' onClick={deleteCity} />
 			</div>
-
-			{/* <div>
-				{(() => {
-					if (currCondition && currCondition.toLowerCase().includes('sunny')) {
-						return <Image src={sunny} height={60} width={60} alt='Sunny Weather icon' />
-					} else if (currCondition && currCondition.toLowerCase().includes('cloudy')) {
-						return <Image src={cloudy} height={60} width={60} alt='Cloudy Weather icon' />
-					} else if (currCondition && currCondition.toLowerCase().includes('snowy')) {
-						return <Image src={snowy} height={60} width={60} alt='Snowy Weather icon' />
-					} else {
-						return <Image src={fallback} height={60} width={60} alt='Fallback Weather icon' />
-					}
-				})()}
-			</div> */}
 
 			<div>
 				{currCondition &&
 					(currCondition.toLowerCase().includes('sunny') ? (
-						<Image src={sunny} height={60} width={60} alt='Sunny Weather icon' />
-					) : currCondition.toLowerCase().includes('cloudy') ? (
-						<Image src={cloudy} height={60} width={60} alt='Cloudy Weather icon' />
-					) : currCondition.toLowerCase().includes('snowy') ? (
-						<Image src={snowy} height={60} width={60} alt='Snowy Weather icon' />
+						<Image src={sunny} height={30} width={30} alt='Sunny Weather icon' />
+					) : currCondition.toLowerCase().includes('cloud') ? (
+						<Image src={cloudy} height={30} width={30} alt='Cloudy Weather icon' />
+					) : currCondition.toLowerCase().includes('snow') ? (
+						<Image src={snowy} height={30} width={30} alt='Snowy Weather icon' />
+					) : currCondition.toLowerCase().includes('rain') ? (
+						<Image src={rainy} height={30} width={30} alt='Rainy Weather icon' />
 					) : (
-						<Image src={fallback} height={60} width={60} alt='Fallback Weather icon' />
+						<Image src={fallback} height={30} width={30} alt='Fallback Weather icon' />
 					))}
 			</div>
 
 			<div>
-				<span>{temperature}°C</span>
+				<span className={styles.temp}>{temperature}°C</span>
+				<span className={styles.cityName}>{cityName}</span>
 				<div>
-					{cityName} ({country})
+					<small>
+						<span>{isDay === 1 ? <span>Day</span> : <span>Night</span>}</span>
+						<span> &#x2022; {currCondition}</span>
+					</small>
 				</div>
 			</div>
 		</div>

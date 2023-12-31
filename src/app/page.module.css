@@ -1,59 +1,176 @@
-/* .header {
+main.appWrapper {
 	display: flex;
 	justify-content: space-between;
-	align-items: flex-start;
-	gap: 4rem;
-} */
+	width: 100vw;
+	height: 100vh;
+	background-image: url('../../public/bgImages/day/snow.jpg');
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: #fff;
+	position: relative;
+	transition: 500ms;
+	opacity: 1; /*change to 0 when whole app finished */
+}
 
-/* .header {
-	margin-bottom: 1rem;
-} */
+.appWrapper::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 0;
+}
 
-.checkbox[type='checkbox'] {
-	accent-color: #808080;
+.container {
+	/* height: 100vh; */
+	width: 70vw;
+	padding: 2rem;
+}
+
+.bannerContainer {
+	/* width: 60vw; */
+	display: flex;
+	justify-content: space-between;
+	margin-top: 0.2rem;
+}
+
+.bannerItems {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+}
+
+.contentContainer {
+	height: 80vh;
+	display: flex;
+	align-items: flex-end;
+	padding-bottom: 2rem;
+}
+
+.cityDetails {
+	display: flex;
+	justify-content: baseline;
+	align-items: flex-end;
+	height: 100%;
+	width: 100%;
+	gap: 2.5rem;
+	z-index: 10;
+}
+
+h1.temp {
+	font-size: 7rem;
+	margin: 0;
+	transform: translate(0, 25%);
+}
+
+h1.cityName {
+	font-size: 3rem;
+}
+
+.weatherDetails {
+	list-style-type: none;
+}
+
+.sidePanel {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 30vw;
+	max-width: 40vw;
+	height: 100vh;
+	background-color: rgba(110, 110, 110, 0.25);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+	backdrop-filter: blur(10px);
+	border: 1 px solid rgba(255, 255, 255, 0.18);
+	z-index: 10;
+	padding: 3rem 2rem;
+	overflow-y: scroll;
+}
+
+.sidePanelHeader {
+	display: flex;
+	justify-content: space-between;
+}
+
+.sidePanelCards {
+	display: flex;
+	flex-direction: column;
 }
 
 .inputContainer {
 	display: flex;
-	padding: 20px 30px;
-	align-items: center;
-	border-radius: 5px;
-	/* max-width: fit-content; */
-	background-color: rgb(50, 48, 48, 0.4);
-	margin-bottom: 0.8rem;
-	position: relative;
+	flex-direction: column;
+	margin-top: 3rem;
+	margin-bottom: 5rem;
 }
 
 .inputField {
-	border: 1px black solid;
-	padding: 1rem;
-	background-color: rgb(50, 48, 48, 0.4);
+	width: 100%;
+	border: none;
+	padding: 0 1rem 0.5rem 0;
+	/* background-color: #fa6d1b; */
+	border-bottom: 1px #ccc solid;
+	background: none;
+	color: #fff;
+	cursor: pointer;
+	font-size: 1.1rem;
 }
+/* any change to the properties specified within the .inputField class will
+take 0.4 seconds to complete. In this case, if there is a
+change in properties like background-color, color, or 
+font-size, the transition effect will occur over the 
+specified duration. */
 
 .inputField:focus {
 	outline: none;
 }
 
-.labelModeCheckbox {
-	font-weight: 600;
-	font-size: 14px;
-	margin-right: 0.8rem;
-}
-
-.label {
-	font-weight: 700;
-	margin-right: 0.8rem;
-}
-
-/* .logoAlster {
-	margin-top: 2rem;
+/* .inputField:hover {
+	background-color: #fff;
+	color: #000;
 } */
 
-/* .btn {
-	background-color: transparent;
+.inputField::placeholder {
+	color: #ccc;
+}
+
+.inputField:hover::placeholder {
+	color: #333;
+}
+
+/* Dark Mode checkbox */
+/* .labelModeCheckbox {
+	font-weight: 400;
+	color: #ccc;
+	font-size: 1rem;
+	margin-right: 0.8rem;
+}
+
+.checkbox[type='checkbox'] {
+	accent-color: #ccc;
+} */
+
+.logoAlster {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+}
+
+/* .delAllBtnContainer {
+	align-self: flex-end;
+} */
+
+.delAllBtn {
+	background-color: rgba(18, 18, 18, 0.25);
+	padding: 0.4rem;
 	border: none;
 	cursor: pointer;
-} */
+	color: #ccc;
+	margin-left: 1.1rem;
+}
 
 .dataResult {
 	margin-top: 5px;
@@ -94,32 +211,10 @@
 	background: lightgrey;
 }
 
-.bannerContainer {
-	/* width: 100vw; */
-	display: flex;
-	flex-direction: row;
-	gap: 4rem;
-	/* width: calc(100vw - 1 * 1rem); */
-}
-/* width: calc(100vw - /* sum of padding, margins, and borders */
-
-.bannerCity {
-	/* white-space: nowrap; */
-	/* border: 1px solid black; */
-	padding: 0.5rem;
-	background-color: rgb(50, 48, 48, 0.4);
-}
-
-.main {
-	/* background-color: rgb(154, 201, 123); */
-	/* width: 100vw; */
-	display: flex;
-}
-
-.layout {
+/* .container {
 	flex: 1 0 auto;
-}
 
+} */
 /* flex-grow: 1 = can grow to take up available space if any
 flex-shrink: 0 = will shrink at a rate of 0 compared to other flex items
 if there is not enough space
@@ -134,3 +229,66 @@ flex-basis: auto = the default size is determined by size of content
 		width: 100vw;
 	}
 } */
+
+@media screen and (max-width: 600px) {
+	main.appWrapper {
+		width: 100vw;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.sidePanel,
+	.container {
+		position: relative;
+		top: initial;
+	}
+
+	.bannerContainer {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+	}
+
+	.bannerIcon {
+		width: 25px;
+		height: 25px;
+	}
+
+	h1.temp {
+		font-size: 4.5rem;
+		transform: translate(0, 15%);
+	}
+
+	h1.cityName {
+		font-size: 2.5rem;
+	}
+
+	ul.weatherDetails li {
+		display: none;
+	}
+
+	.bannerCityName {
+		font-size: 16px;
+	}
+
+	.bannerCityTemp {
+		font-size: 14px;
+	}
+
+	.container {
+		min-width: 100%;
+		padding: 2rem;
+	}
+
+	.contentContainer {
+		height: 30vh;
+		min-width: 100%;
+		/* padding: 2rem; */
+	}
+
+	.sidePanel {
+		/* overflow-y: hidden; */
+		min-width: 100%;
+		/* padding: 2rem; */
+	}
+}

@@ -1,39 +1,43 @@
 .card {
 	display: flex;
-	color: white;
-	padding: 30px;
+	color: #ccc;
+	padding: 1.5rem;
 	border-radius: 2px;
-	gap: 2rem;
 	margin: 1rem;
+	gap: 2rem;
 	position: relative;
-	min-width: 320px;
 }
 
 .closeBtn {
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	top: 0.6rem;
+	right: 0.6rem;
 	cursor: pointer;
 }
 
 .temp {
-	font-size: 46px;
-	font-weight: 500;
+	font-size: 1.2rem;
+	font-weight: 400;
+	display: inline-block;
+	margin-right: 0.2rem;
 }
 
-.city {
-	font-size: 0.9rem;
-	font-weight: 900;
+.cityName {
+	font-size: 1rem;
+	font-weight: 400;
 }
 
 .bgHighTemp {
-	background-color: rgb(242, 71, 38, 0.4);
+	/* background-color: rgba(233, 98, 83, 0.2); */
+	background-color: rgba(37, 37, 36, 0.2);
 }
 
 .bgModerateTemp {
-	background-color: rgb(250, 199, 16, 0.4);
+	/* background-color: rgba(244, 235, 115, 0.2); */
+	background-color: rgba(37, 37, 36, 0.2);
 }
 
 .bgLowTemp {
-	background-color: rgb(45, 155, 240, 0.4);
+	/* background-color: rgba(78, 174, 247, 0.2); */
+	background-color: rgba(37, 37, 36, 0.2);
 }

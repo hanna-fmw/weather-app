@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
 	box-sizing: border-box;
 	padding: 0;
@@ -6,6 +10,7 @@
 
 :root {
 	--foreground-rgb: 0, 0, 0;
+	--background: #111;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -14,35 +19,58 @@
 	}
 } */
 
-body {
+/* body {
 	color: rgb(var(--foreground-rgb));
+	background-color: var(--background);
 	background-image: url('../../public/bgImages/day/cloud.jpg');
 	width: 100vw;
 	height: auto;
 }
+
+body:has(.bgDaySnowy) {
+	background-image: url('../../public/bgImages/day/snow.jpg');
+	width: 100vw;
+	height: 400px;
+} */
 
 /* body:has(input:checked) {
 	background-color: #232323;
 	color: #808080;
 } */
 
-h1 {
-	font-size: 1.5rem;
-	font-weight: 700;
-	margin-bottom: 1rem;
+h1,
+h3 {
+	font-weight: 400;
 }
 
-/* main { */
-/* background-color: rgb(154, 201, 123); */
-/* width: 100vw;
-	display: flex; */
+/* footer {
+	flex-shrink: 0;
+	padding: 20px;
+	border-bottom: 1px solid rgba(18, 18, 18, 0.4);
+	margin-top: auto;
+} */
 
-/* padding: 2rem;
- }
+/* @media screen and (max-width: 800px) {
+	.leftContainer,
+	.sidePanel {
+		position: relative;
+		width: 100%;
+		top: initial;
+	}
+} */
 
-footer {
-	/* flex-shrink: 0; */
-/* padding: 20px;
-	border-bottom: 1px solid rgba(18, 18, 18, 0.4); */
-/* margin-top: auto; */
-/* } */
+/* @media screen and (max-width: 500px) {
+	html {
+		font-size: 12px;
+	
+	}
+	
+} */
+
+/* @media screen and (max-height: 300) {
+	.appWrapper {
+		min-height: 40rem;
+	}
+} */
+
+

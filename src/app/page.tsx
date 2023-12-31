@@ -375,7 +375,12 @@ export default function Home() {
 		getBannerCities()
 	}, [])
 
-	const marqueeVariants = {
+	//Clear Local Storage
+	const clearLocalStorage = () => {
+		localStorage.clear()
+	}
+
+	const bannerVariants = {
 		animate: {
 			y: ['-10vh', '1.5vh'],
 			transition: {
@@ -389,9 +394,20 @@ export default function Home() {
 		},
 	}
 
-	//Clear Local Storage
-	const clearLocalStorage = () => {
-		localStorage.clear()
+	const dropDownVariants = {
+		animate: {
+			opacity: [0, 1],
+			transition: {
+				when: 'beforeChildren',
+				staggerChildren: 0.5,
+			},
+		},
+	}
+
+	const dropDownVariantsChildren = {
+		initial: { opacity: 0, y: -10 },
+		animate: { opacity: 1, y: 0 },
+		exit: { opacity: 0, y: -10 },
 	}
 
 	// const parentVariants = {
@@ -425,10 +441,16 @@ export default function Home() {
 				<header className={styles.bannerContainer}>
 					<div className={styles.bannerItems}>
 						{bannerCities?.map((city, i) => (
-							<motion.div key={i} className={styles.bannerCity} variants={marqueeVariants} animate='animate' exit='exit'>
+							<motion.div key={i} className={styles.bannerCity} variants={bannerVariants} animate='animate' exit='exit'>
 								<div className={styles.bannerCityName}>{city.location.name}&nbsp;</div>
 								<div className={styles.bannerCityTemp}>{city.current.temp_c}°C</div>
-								<img src={city.current.condition.icon} width={30} height={30} alt={`Weather icon for ${city.location.name}`} className={styles.bannerIcon} />
+								<img
+									src={city.current.condition.icon}
+									width={30}
+									height={30}
+									alt={`Weather icon for ${city.location.name}`}
+									className={styles.bannerIcon}
+								/>
 								{/* <Image src={city.current.condition.icon} width={30} height={30} alt={`Weather icon for ${city.location.name}`} /> */}
 							</motion.div>
 						))}
@@ -491,6 +513,7 @@ export default function Home() {
 							value={enteredCity}
 							autoComplete='off'
 							onKeyDown={(e) => handleKeyNavigation(e)}
+							spellcheck='false'
 							placeholder='Search City...'
 						/>
 					</div>
@@ -519,24 +542,33 @@ export default function Home() {
 						''
 					)}
 
-					<div className={styles.dataresult}>
+					<motion.div className={styles.dataresult}>
 						{Array.isArray(cityItems) ? (
 							cityItems.map((item, i) => (
-								<div
-									key={i}
+								<motion.div
 									onClick={() => getCurrentWeather(item)}
+									initial={{ opacity: 0, y: -10 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: -10 }}
+									transition={{ duration: 0.5, delay: i * 0.1 }}
+									key={i}
 									className={`${activeItem === i ? `${styles.searchListItem} ${styles.active}` : styles.searchListItem}`}>
 									<span>{item?.name} </span>(<span>{item?.country}</span>)
-								</div>
+								</motion.div>
 							))
 						) : (
-							<div onClick={() => getCurrentWeather(cityItems)}>
+							<motion.div
+								onClick={() => getCurrentWeather(cityItems)}
+								initial={{ opacity: 0, y: -10 }}
+								animate={{ opacity: 1, y: 0 }}
+								exit={{ opacity: 0, y: -10 }}
+								transition={{ duration: 0.5, delay: 0.1 }}>
 								<span>{cityItems?.name}</span>
 								<span>{cityItems?.country}</span>
 								<span>{cityItems?.id}</span>
-							</div>
+							</motion.div>
 						)}
-					</div>
+					</motion.div>
 					{/* <div>{Array.isArray(cityItems) ? cityItems.map((item, i) => <div key={i}>{item?.name}</div>) : <div>{cityItems?.name}</div>}</div> */}
 				</div>
 

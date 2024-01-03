@@ -3,7 +3,7 @@ main.appWrapper {
 	justify-content: space-between;
 	width: 100vw;
 	height: 100vh;
-	background-image: url('../../public/bgImages/day/snow.jpg');
+	/* background-image: url('../../public/bgImages/day/snow.jpg'); */
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -11,6 +11,8 @@ main.appWrapper {
 	position: relative;
 	transition: 500ms;
 	opacity: 1; /*change to 0 when whole app finished */
+	opacity: appOpacity;
+	transition: opacity 1000ms;
 }
 
 .appWrapper::before {
@@ -50,20 +52,32 @@ main.appWrapper {
 	padding-bottom: 2rem;
 }
 
+.tempContainer {
+	display: flex;
+	flex-direction: flex-end;
+}
+
 .cityDetails {
 	display: flex;
-	justify-content: baseline;
+	justify-content: flex-start;
 	align-items: flex-end;
 	height: 100%;
 	width: 100%;
-	gap: 2.5rem;
+	gap: 6rem;
 	z-index: 10;
+}
+
+.cityTemp {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	align-items: flex-start;
+	padding-left: 1.5rem;
 }
 
 h1.temp {
 	font-size: 7rem;
 	margin: 0;
-	transform: translate(0, 25%);
 }
 
 h1.cityName {
@@ -72,6 +86,7 @@ h1.cityName {
 
 .weatherDetails {
 	list-style-type: none;
+	font-size: 0.9rem;
 }
 
 .sidePanel {
@@ -237,7 +252,7 @@ flex-basis: auto = the default size is determined by size of content
 	}
 } */
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 600px) {
 	main.appWrapper {
 		width: 100vw;
 		display: flex;
@@ -262,8 +277,7 @@ flex-basis: auto = the default size is determined by size of content
 	}
 
 	h1.temp {
-		font-size: 4.5rem;
-		transform: translate(0, 15%);
+		font-size: 2.5rem;
 	}
 
 	h1.cityName {
@@ -290,7 +304,6 @@ flex-basis: auto = the default size is determined by size of content
 	.contentContainer {
 		height: 30vh;
 		min-width: 100%;
-		/* padding: 2rem; */
 	}
 
 	.sidePanel {

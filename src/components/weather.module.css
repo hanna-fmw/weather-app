@@ -25,6 +25,7 @@
 .cityName {
 	font-size: 1rem;
 	font-weight: 400;
+	margin-right: 0.2rem;
 }
 
 .bgHighTemp {

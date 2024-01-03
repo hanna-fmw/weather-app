@@ -41,6 +41,9 @@ body:has(.bgDaySnowy) {
 h1,
 h3 {
 	font-weight: 400;
+	margin: 0;
+	padding: 0;
+	line-height: 1;
 }
 
 /* footer {
@@ -72,5 +75,3 @@ h3 {
 		min-height: 40rem;
 	}
 } */
-
-

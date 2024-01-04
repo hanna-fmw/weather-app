@@ -3,16 +3,13 @@ main.appWrapper {
 	justify-content: space-between;
 	width: 100vw;
 	height: 100vh;
-	/* background-image: url('../../public/bgImages/day/snow.jpg'); */
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
 	color: #fff;
 	position: relative;
 	transition: 500ms;
-	opacity: 1; /*change to 0 when whole app finished */
-	opacity: appOpacity;
-	transition: opacity 1000ms;
+	/* opacity: appOpacity; */
 }
 
 .appWrapper::before {

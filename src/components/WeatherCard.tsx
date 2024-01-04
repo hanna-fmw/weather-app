@@ -1,11 +1,11 @@
 import React from 'react'
 import styles from './weather.module.css'
 import '../app/globals.css'
-import sunny from '../../public/icons/day/113.png'
-import cloudy from '../../public/icons/day/116.png'
-import snowy from '../../public/icons/day/338.png'
-import rainy from '../../public/icons/day/308.png'
-import fallback from '../../public/icons/day/119.png'
+// import sunny from '../../public/icons/day/113.png'
+// import cloudy from '../../public/icons/day/116.png'
+// import snowy from '../../public/icons/day/338.png'
+// import rainy from '../../public/icons/day/308.png'
+// import fallback from '../../public/icons/day/119.png'
 import Image from 'next/image'
 import closeBtn from '../../public/closeBtn.svg'
 
@@ -16,9 +16,14 @@ type City = {
 	country?: string
 	isDay?: number
 	deleteCity: () => void
+	localTime?: string
+	feelslike?: number
+	humidity?: number
+	cloud?: number
+	wind?: number
 }
 
-const WeatherCard = ({ cityName, temperature, currConditionText, deleteCity, country }: City) => {
+const WeatherCard = ({ cityName, temperature, currConditionText, deleteCity, country, localTime, feelslike, humidity, cloud, wind }: City) => {
 	// console.log(currCondition)
 	//Background colors
 	const highTemp = temperature && temperature > 19
@@ -50,11 +55,23 @@ const WeatherCard = ({ cityName, temperature, currConditionText, deleteCity, cou
 			<div>
 				<span className={styles.temp}>{temperature}°C</span>
 				<span className={styles.cityName}>{cityName}</span>
-				<span className={styles.cityName}>({country})</span>
-				<div>
+				<span className={styles.country}>({country})</span>
+				<div className={styles.weatherDetails}>
 					<small>
-						{/* <span>{isDay === 1 ? <span>Day</span> : <span>Night</span>}</span> */}
+						<span>{localTime}</span>
+						<span className={styles.pipe}> &#x7c; </span>
 						<span>{currConditionText}</span>
+					</small>
+
+					<small>
+						<span>Feels like: {feelslike}&#176;</span>
+						<span className={styles.pipe}> &#x7c; </span>
+						<span>Humidity: {humidity}%</span>
+						<span className={styles.pipe}> &#x7c; </span>
+
+						<span>Cloud: {cloud}%</span>
+						<span className={styles.pipe}> &#x7c; </span>
+						<span>Wind: {wind}m/s</span>
 					</small>
 				</div>
 			</div>

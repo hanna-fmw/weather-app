@@ -72,20 +72,6 @@ type BannerCity = {
 	}
 }
 
-// type CityByIp = {
-// 	location: {
-// 		name: string
-// 		country: string
-// 	}
-// 	current: {
-// 		temp_c: number
-// 		condition: {
-// 			text: string
-// 			icon: string
-// 		}
-// 	}
-// }
-
 type CityByIp = {
 	location: {
 		name: string
@@ -114,14 +100,6 @@ export default function Home() {
 	const [weatherByIp, setWeatherByIp] = useState<CityByIp>({})
 
 	const [displayInContentContainer, setDisplayInContentContainer] = useState<NewWeatherItem>(weatherByIp)
-	// cityName: 'City',
-	// temperature: 0,
-	// currConditionText: 'Current Weather',
-	// localTime: '00:00 1 January',
-	// feelslike: 0,
-	// humidity: 0,
-	// cloud: 0,
-	// wind: 0,
 
 	const [weatherData, setWeatherData] = useState<null | WeatherData>(null)
 	const [isCityNotFound, setIsCityNotFound] = useState<boolean>(false)
@@ -141,26 +119,15 @@ export default function Home() {
 
 	const [isDay, setIsDay] = useState<boolean>(false)
 
-	//Fade in-fade out animation
-	const [appOpacity, setAppOpacity] = useState(1)
-
-	// async function fetchUserIp() {
-	// 	// Call the /api/ip endpoint to get the user's IP address
-	// 	const ipResponse = await fetch('/api/ip')
-	// 	const { ip_address } = await ipResponse.json()
-
-	// 	// Now, use the IP address to fetch weather information
-	// 	const weatherResponse = await fetch(`http://api.weatherapi.com/v1/forecast.json?key=9ec16cfb15ce4a1e88484621232211&q=${ip_address}`)
-	// 	const iPweatherData = await weatherResponse.json()
-
-	// 	// Process weatherData as needed
-	// 	console.log('this is ip address data', iPweatherData)
-	// }
-
-	const getIp = async () => {
+	const fetchWeatherByIp = async () => {
 		const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=auto:ip`)
 		const data = await res.json()
-		console.log('detta är ip address', data)
+		console.log('detta är info från ip lookup api', data)
+		if (data.current.is_day) {
+			setIsDay(true)
+		} else {
+			setIsDay(false)
+		}
 		setWeatherByIp(data)
 	}
 
@@ -168,8 +135,8 @@ export default function Home() {
 	//När jag körde Array.isArray(storedItemsArray) i stället för att först sätta setWeatherList(storedItemsArray) följt av
 	//Array.isArray(weatherList) så fick jag plötsligt ut items med console.log(storedItemsArray).
 	useEffect(() => {
-		const fetchInitialData = async () => {
-			await getIp()
+		const getInitialData = () => {
+			fetchWeatherByIp()
 			const storedItems = localStorage.getItem('weatherList')
 			const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
 			Array.isArray(storedItemsArray) &&
@@ -180,7 +147,7 @@ export default function Home() {
 
 			console.log('Stored Items Array', storedItemsArray)
 		}
-		fetchInitialData()
+		getInitialData()
 	}, [])
 
 	useEffect(() => {
@@ -300,6 +267,7 @@ export default function Home() {
 				) {
 					setWeatherData(data)
 					setEnteredCity('')
+
 					setCityItems([])
 				} else {
 					console.error('Invalid data structure for the city:', data)
@@ -351,21 +319,21 @@ export default function Home() {
 			cityName: weatherData?.location.name,
 			country: weatherData?.location.country,
 			temperature: weatherData?.current.temp_c,
-			// currCondition: weatherData?.current.condition,
 			currConditionText: weatherData?.current.condition.text,
-			// currConditionCode: weatherData?.current.condition.code,
-			// currConditionIcon: weatherData?.current.condition.icon,
+			currConditionCode: weatherData?.current.condition.code,
 			isDay: weatherData?.current.is_day,
+			localTime: formatLocalTime(weatherData?.location.localtime),
+			feelslike: weatherData?.current.feelslike_c,
+			humidity: weatherData?.current.humidity,
+			cloud: weatherData?.current.cloud,
+			wind: kphTomps(weatherData?.current.wind_kph),
 		}
 
-		//Save to variable for displaying in content container & update local storage after adding new item
+		//Update local storage after adding new item
 		const updatedWeatherList = [...weatherList, newWeatherItem]
 		setWeatherList(updatedWeatherList)
-		localStorage.setItem('weatherList', JSON.stringify(weatherList))
-		//Save to variable for displaying in content container without saving to local storage
-		// const updatedDisplayInContentContainer = [...displayInContentContainer, newWeatherItem]
-		setDisplayInContentContainer(newWeatherItem)
-		console.log('detta är displayContentContainer', displayInContentContainer)
+		// localStorage.setItem('weatherList', JSON.stringify(weatherList))
+		localStorage.setItem('weatherList', JSON.stringify(updatedWeatherList))
 	}
 
 	const addCityToContentContainer = () => {
@@ -374,7 +342,6 @@ export default function Home() {
 			cityName: weatherData?.location.name,
 			country: weatherData?.location.country,
 			temperature: weatherData?.current.temp_c,
-			// currCondition: weatherData?.current.condition,
 			currConditionText: weatherData?.current.condition.text,
 			currConditionCode: weatherData?.current.condition.code,
 			currConditionIcon: weatherData?.current.condition.icon,
@@ -388,7 +355,6 @@ export default function Home() {
 		}
 
 		//Save to variable for displaying in content container without saving to local storage
-		// const updatedDisplayInContentContainer = [...displayInContentContainer, newWeatherItem]
 		setDisplayInContentContainer(newWeatherItem)
 		console.log('detta är displayContentContainer', displayInContentContainer)
 	}
@@ -599,7 +565,7 @@ export default function Home() {
 					case 1000:
 						return '/bgImages/night/night-clear-sky.jpg'
 					case 1003:
-						return '/bgImages/night/night-partly-cloudy.jpg'
+						return '/bgImages/night/night-cloud.jpg'
 					case 1006:
 						return '/bgImages/night/night-cloud.jpg'
 					case 1009:
@@ -725,17 +691,13 @@ export default function Home() {
 
 							<small>
 								<span className={styles.localTime}>{displayInContentContainer?.localTime}</span>
-								{/* <span className={styles.date}>Monday Sept 10</span> */}
 							</small>
 						</div>
 
-						{/* <Image src={sunnyIcon} width={50} height={50} alt={`Weather icon for XXX`} className={styles.icon} /> */}
 						<div>
 							<div className={styles.weatherDescription}>{displayInContentContainer?.currConditionText}</div>
 
 							<img src={displayInContentContainer?.currConditionIcon} width={40} height={40} className={styles.bannerIcon} />
-
-							{/* <div className={styles.weatherDescription}>{displayInContentContainer?.currConditionCode}</div> */}
 
 							<ul className={styles.weatherDetails}>
 								<li className={styles.feelslike}>
@@ -859,6 +821,11 @@ export default function Home() {
 											country={item.country}
 											isDay={item.isDay}
 											deleteCity={() => deleteCity(item.id)}
+											feelslike={item.feelslike}
+											localTime={item.localTime}
+											humidity={item.humidity}
+											cloud={item.cloud}
+											wind={item.wind?.toFixed(1)}
 										/>
 									}
 								</div>

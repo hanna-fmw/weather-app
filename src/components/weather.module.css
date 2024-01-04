@@ -22,10 +22,22 @@
 	margin-right: 0.2rem;
 }
 
-.cityName {
+.cityName,
+.country {
 	font-size: 1rem;
 	font-weight: 400;
 	margin-right: 0.2rem;
+}
+
+.weatherDetails {
+	display: flex;
+	flex-direction: column;
+	margin-top: 0.8rem;
+}
+
+.pipe {
+	margin-right: 0.5rem;
+	margin-left: 0.5rem;
 }
 
 .bgHighTemp {

@@ -59,19 +59,18 @@ const WeatherCard = ({ cityName, temperature, currConditionText, deleteCity, cou
 				<div className={styles.weatherDetails}>
 					<small>
 						<span>{localTime}</span>
-						<span className={styles.pipe}> &#x7c; </span>
+						<span className={styles.pipe}>&#x7c;</span>
 						<span>{currConditionText}</span>
 					</small>
 
 					<small>
-						<span>Feels like: {feelslike}&#176;</span>
-						<span className={styles.pipe}> &#x7c; </span>
-						<span>Humidity: {humidity}%</span>
-						<span className={styles.pipe}> &#x7c; </span>
-
-						<span>Cloud: {cloud}%</span>
-						<span className={styles.pipe}> &#x7c; </span>
-						<span>Wind: {wind}m/s</span>
+						<span>Feels like:&nbsp;{feelslike}&#176;</span>
+						<span className={styles.pipe}>&#x7c;</span>
+						<span>Humidity:&nbsp;{humidity}%</span>
+						<span className={styles.pipe}>&#x7c;</span>
+						<span>Cloud:&nbsp;{cloud}%</span>
+						<span className={styles.pipe}>&#x7c;</span>
+						<span>Wind:&nbsp;{wind}m/s</span>
 					</small>
 				</div>
 			</div>

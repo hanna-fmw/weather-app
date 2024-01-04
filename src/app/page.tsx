@@ -12,6 +12,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import Popup from '@/components/Popup'
 import { formatLocalTime } from '../app/utils/dateFormatting'
 import { kphTomps } from '../app/utils/kphTomps'
+import { v4 as uuidv4 } from 'uuid'
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY
 
@@ -154,7 +155,7 @@ export default function Home() {
 		// Check if weatherByIp has data and set it as the initial content
 		if (weatherByIp && Object.keys(weatherByIp).length > 0) {
 			setDisplayInContentContainer({
-				id: new Date().getTime().toString(),
+				id: uuidv4(),
 				cityName: weatherByIp.location.name,
 				country: weatherByIp.location.country,
 				temperature: weatherByIp.current.temp_c,
@@ -315,7 +316,7 @@ export default function Home() {
 	//ADD CITY
 	const addCity = () => {
 		const newWeatherItem = {
-			id: new Date().getTime().toString(),
+			id: uuidv4(),
 			cityName: weatherData?.location.name,
 			country: weatherData?.location.country,
 			temperature: weatherData?.current.temp_c,
@@ -338,7 +339,7 @@ export default function Home() {
 
 	const addCityToContentContainer = () => {
 		const newWeatherItem = {
-			id: new Date().getTime().toString(),
+			id: uuidv4(),
 			cityName: weatherData?.location.name,
 			country: weatherData?.location.country,
 			temperature: weatherData?.current.temp_c,

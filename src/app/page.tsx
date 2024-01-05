@@ -98,7 +98,8 @@ export default function Home() {
 	const [enteredCity, setEnteredCity] = useState<string>('')
 	const [weatherList, setWeatherList] = useState<NewWeatherItem[]>([])
 
-	const [weatherByIp, setWeatherByIp] = useState<CityByIp>({})
+	//eftersom en fetch så kan den vara null, vi måste
+	const [weatherByIp, setWeatherByIp] = useState<CityByIp | null>(null)
 
 	const [displayInContentContainer, setDisplayInContentContainer] = useState<NewWeatherItem>(weatherByIp)
 
@@ -131,13 +132,12 @@ export default function Home() {
 		}
 		setWeatherByIp(data)
 	}
-
 	//RETRIEVE FROM LOCAL STORAGE
 	//När jag körde Array.isArray(storedItemsArray) i stället för att först sätta setWeatherList(storedItemsArray) följt av
 	//Array.isArray(weatherList) så fick jag plötsligt ut items med console.log(storedItemsArray).
 	useEffect(() => {
-		const getInitialData = () => {
-			fetchWeatherByIp()
+		const getInitialData = async () => {
+			await fetchWeatherByIp()
 			const storedItems = localStorage.getItem('weatherList')
 			const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
 			Array.isArray(storedItemsArray) &&
@@ -145,7 +145,6 @@ export default function Home() {
 					getCurrentWeather(item.id)
 				})
 			setWeatherList(storedItemsArray)
-
 			console.log('Stored Items Array', storedItemsArray)
 		}
 		getInitialData()
@@ -167,7 +166,7 @@ export default function Home() {
 				feelslike: weatherByIp.current.feelslike_c,
 				humidity: weatherByIp.current.humidity,
 				cloud: weatherByIp.current.cloud,
-				wind: kphTomps(weatherByIp.current.wind_kph),
+				wind: parseFloat(kphTomps(weatherByIp.current.wind_kph)),
 			})
 		}
 	}, [weatherByIp])
@@ -177,18 +176,16 @@ export default function Home() {
 		if (weatherList.length !== 0) {
 			const updatedWeatherList = weatherList.sort((a, b) => (a.temperature && b.temperature ? a.temperature - b.temperature : 0))
 			setWeatherList(updatedWeatherList)
-			console.log('Weather List', weatherList)
-			// localStorage.setItem('weatherList', JSON.stringify(weatherList))
+			console.log('Weather list:', weatherList)
 		}
 	}, [weatherList])
 
 	useEffect(() => {
 		if (weatherData && weatherData.location && weatherData.location.name && weatherData.location.country) {
-			console.log('this is weatherData', weatherData)
+			console.log('Weather data:', weatherData)
 			addCity()
 			addCityToContentContainer()
-		} else {
-			// console.log('oops')
+			return
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [weatherData])
@@ -199,42 +196,20 @@ export default function Home() {
 	}
 
 	const debounced = useDebouncedCallback((value) => {
-		triggerSearch()
+		searchCity(value)
 	}, 100)
-
-	//Slå ihop searchCity och triggerSearch med detta - samt där jag kör triggerSearch anropa denna i stället:
-	// const searchCity = async (cityName: string) => {
-	// 	try {
-	// 	  const res = await fetch(`http://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${cityName}`);
-	// 	  const cityData = await res.json();
-
-	// 	  // Set city items directly here
-	// 	  setCityItems(cityData);
-
-	// 	  // Optionally, you can return the city data if needed elsewhere
-	// 	  return cityData;
-	// 	} catch (error) {
-	// 	  console.error('Error:', error);
-	// 	}
-	//   };
 
 	const searchCity = async (cityName: string) => {
 		try {
 			const res = await fetch(`http://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${cityName}`)
 			const cityData = await res.json()
+			setCityItems(cityData)
+			setActiveItem(0)
+			console.log('City items list', cityItems)
 			return cityData
 		} catch (error) {
 			console.error('Error:', error)
 		}
-	}
-
-	//Fetch from Search API
-	const triggerSearch = async () => {
-		const searchedCity = await searchCity(enteredCity)
-		setCityItems(searchedCity)
-		//Reset activeItem to 0 as new items appear in the suggestion list
-		setActiveItem(0)
-		console.log('city items list', cityItems)
 	}
 
 	//Fetch from "current" endpoint and pass in id from Search API response
@@ -268,16 +243,17 @@ export default function Home() {
 				) {
 					setWeatherData(data)
 					setEnteredCity('')
-
 					setCityItems([])
 				} else {
-					console.error('Invalid data structure for the city:', data)
+					console.error('Error:', data)
 				}
 				if (data.current.is_day) {
 					setIsDay(true)
 				} else {
 					setIsDay(false)
 				}
+
+				console.log('Weather Data', weatherData)
 
 				return data
 			} catch (error) {
@@ -347,7 +323,6 @@ export default function Home() {
 			currConditionCode: weatherData?.current.condition.code,
 			currConditionIcon: weatherData?.current.condition.icon,
 			isDay: weatherData?.current.is_day,
-			// localTime: weatherData?.location.localtime,
 			localTime: formatLocalTime(weatherData?.location.localtime),
 			feelslike: weatherData?.current.feelslike_c,
 			humidity: weatherData?.current.humidity,
@@ -361,7 +336,7 @@ export default function Home() {
 	}
 
 	//DELETE CITY
-	const deleteCity = (id: string) => {
+	const deleteCity = (id: string | undefined) => {
 		const updatedList = [...weatherList].filter((item) => item.id !== id)
 		setWeatherList(updatedList)
 		//Update local storage after deleting an item
@@ -449,40 +424,17 @@ export default function Home() {
 		setWeatherList([])
 	}
 
-	const appVariants = {
-		initial: { opacity: 0 },
-		animate: { opacity: 1 },
-		exit: { opacity: 0 },
-	}
-
 	const bannerVariants = {
 		animate: {
 			y: ['-10vh', '1.5vh'],
 			transition: {
 				y: {
-					// repeat: Infinity,
 					repeatType: 'loop',
 					duration: 2,
 					ease: 'linear',
 				},
 			},
 		},
-	}
-
-	const dropDownVariants = {
-		animate: {
-			opacity: [0, 1],
-			transition: {
-				when: 'beforeChildren',
-				staggerChildren: 0.5,
-			},
-		},
-	}
-
-	const dropDownVariantsChildren = {
-		initial: { opacity: 0, y: -10 },
-		animate: { opacity: 1, y: 0 },
-		exit: { opacity: 0, y: -10 },
 	}
 
 	const getBackgroundImage = (isDay: boolean) => {
@@ -634,35 +586,8 @@ export default function Home() {
 
 	let backgroundImage = getBackgroundImage(isDay)
 
-	// const parentVariants = {
-	// 	animate: {
-	// 		y: ['-10vh', '2vh'],
-	// 		opacity: 1,
-	// 		transition: {
-	// 			when: 'beforeChildren',
-	// 			staggerChildren: 0.5,
-	// 		},
-	// 	},
-	// 	exit: { opacity: 0 }, // Remove transition property from exit
-	// }
-
-	// const childrenVariants = {
-	// 	// initial: { y: -20, opacity: 0 },
-	// 	// animate: { y: 0, opacity: 1, transition: { duration: 2 } },
-	// 	transition: {
-	// 		y: {
-	// 			repeat: Infinity,
-	// 			repeatType: 'loop',
-	// 			duration: 3,
-	// 			ease: 'linear',
-	// 		},
-	// 	},
-	// }
-
-	// <motion.main className={styles.appWrapper} variants={appVariants} initial='initial' animate='animate' exit='exit'>
 	return (
 		<main className={styles.appWrapper} style={{ backgroundImage: `url(${backgroundImage})` }}>
-			{/* background-image: url('../../public/bgImages/day/snow.jpg'); */}
 			<section className={styles.container}>
 				<header className={styles.bannerContainer}>
 					<div className={styles.bannerItems}>
@@ -698,7 +623,7 @@ export default function Home() {
 						<div>
 							<div className={styles.weatherDescription}>{displayInContentContainer?.currConditionText}</div>
 
-							<img src={displayInContentContainer?.currConditionIcon} width={40} height={40} className={styles.bannerIcon} />
+							<img src={displayInContentContainer?.currConditionIcon} width={40} height={40} className={styles.bannerIcon} alt='Weather icon' />
 
 							<ul className={styles.weatherDetails}>
 								<li className={styles.feelslike}>
@@ -711,7 +636,7 @@ export default function Home() {
 									<span>Cloud:</span> <span>{displayInContentContainer?.cloud}%</span>
 								</li>
 								<li className={styles.wind}>
-									<span>Wind:</span> <span>{displayInContentContainer?.wind?.toFixed(1)}m/s</span>
+									<span>Wind:</span> <span>{displayInContentContainer?.wind}m/s</span>
 								</li>
 							</ul>
 						</div>
@@ -720,21 +645,10 @@ export default function Home() {
 			</section>
 			<aside className={styles.sidePanel}>
 				<div className={styles.sidePanelHeader}>
-					{/* <div>
-						<label htmlFor='checkbox' className={styles.labelModeCheckbox}>
-							Toggle dark/light mode
-						</label>
-						<input name='checkbox' type='checkbox' className={styles.checkbox} />
-					</div> */}
-
 					<Image src={logoAlster} height={25} width={25} alt='Alster logo' className={styles.logoAlster} />
 				</div>
 				<div className={styles.inputContainer}>
 					<div>
-						{/* <label className={styles.label} htmlFor='search'>
-							City:
-						</label> */}
-
 						<input
 							className={styles.inputField}
 							type='text'
@@ -743,14 +657,14 @@ export default function Home() {
 							value={enteredCity}
 							autoComplete='off'
 							onKeyDown={(e) => handleKeyNavigation(e)}
-							spellcheck='false'
+							spellCheck='false'
 							placeholder='Search City...'
 						/>
 					</div>
 
 					{isCityNotFound ? (
 						<Popup>
-							<div>Det finns ingen stad som matchar din sökning</div>
+							<div>No city found matching your search.</div>
 						</Popup>
 					) : (
 						''
@@ -758,7 +672,7 @@ export default function Home() {
 
 					{isInputEmpty ? (
 						<Popup>
-							<div>Du måste ange en stad</div>
+							<div>Enter a city.</div>
 						</Popup>
 					) : (
 						''
@@ -766,7 +680,7 @@ export default function Home() {
 
 					{isAlreadyAdded ? (
 						<Popup>
-							<div>Staden har redan lagts till</div>
+							<div>City already added.</div>
 						</Popup>
 					) : (
 						''
@@ -799,7 +713,6 @@ export default function Home() {
 							</motion.div>
 						)}
 					</motion.div>
-					{/* <div>{Array.isArray(cityItems) ? cityItems.map((item, i) => <div key={i}>{item?.name}</div>) : <div>{cityItems?.name}</div>}</div> */}
 				</div>
 
 				<div className={styles.sidePanelCards}>
@@ -826,7 +739,7 @@ export default function Home() {
 											localTime={item.localTime}
 											humidity={item.humidity}
 											cloud={item.cloud}
-											wind={item.wind?.toFixed(1)}
+											wind={item.wind}
 										/>
 									}
 								</div>

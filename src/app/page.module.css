@@ -9,7 +9,6 @@ main.appWrapper {
 	color: #fff;
 	position: relative;
 	transition: 500ms;
-	/* opacity: appOpacity; */
 }
 
 .appWrapper::before {
@@ -24,13 +23,11 @@ main.appWrapper {
 }
 
 .container {
-	/* height: 100vh; */
 	width: 70vw;
 	padding: 2rem;
 }
 
 .bannerContainer {
-	/* width: 60vw; */
 	display: flex;
 	justify-content: space-between;
 	margin-top: 0.2rem;
@@ -90,7 +87,7 @@ h1.cityName {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 30vw;
+	width: 40vw;
 	max-width: 40vw;
 	height: 100vh;
 	background-color: rgba(110, 110, 110, 0.25);
@@ -123,7 +120,6 @@ h1.cityName {
 	width: 100%;
 	border: none;
 	padding: 0 1rem 0.5rem 0;
-	/* background-color: #fa6d1b; */
 	border-bottom: 1px #ccc solid;
 	background: none;
 	color: #ccc;
@@ -141,11 +137,6 @@ specified duration. */
 	outline: none;
 }
 
-/* .inputField:hover {
-	background-color: #fff;
-	color: #000;
-} */
-
 .inputField::placeholder {
 	color: #ccc;
 }
@@ -154,27 +145,11 @@ specified duration. */
 	color: #333;
 }
 
-/* Dark Mode checkbox */
-/* .labelModeCheckbox {
-	font-weight: 400;
-	color: #ccc;
-	font-size: 1rem;
-	margin-right: 0.8rem;
-}
-
-.checkbox[type='checkbox'] {
-	accent-color: #ccc;
-} */
-
 .logoAlster {
 	position: absolute;
 	top: 1rem;
 	right: 1rem;
 }
-
-/* .delAllBtnContainer {
-	align-self: flex-end;
-} */
 
 .delAllBtn {
 	background-color: rgba(18, 18, 18, 0.25);
@@ -189,7 +164,6 @@ specified duration. */
 	margin-top: 5px;
 	width: 300px;
 	height: 200px;
-	/* background-color: rgb(200, 200, 200); */
 	background-color: rgba(110, 110, 110, 0.65);
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 	overflow: hidden;
@@ -198,34 +172,16 @@ specified duration. */
 	top: 0;
 }
 
-.dataResult .dataItem {
-	width: 100%;
-	height: 50px;
-	display: flex;
-	align-items: center;
-}
-
-.dataItem {
-	margin-left: 10px;
-	line-height: 1.3;
-}
-
-.dataItem:hover {
-	background-color: #ccc;
-	cursor: pointer;
-}
-
 .searchListItem {
 	color: #ccc;
 }
 
 .searchListItem:hover {
-	background: #ccc;
+	background-color: rgba(37, 37, 36, 0.4);
 	cursor: pointer;
 }
 
 .searchListItem.active {
-	background: #ccc;
 	transition: ease-in 400ms;
 	background-color: rgba(37, 37, 36, 0.4);
 }
@@ -239,15 +195,6 @@ flex-shrink: 0 = will shrink at a rate of 0 compared to other flex items
 if there is not enough space
 flex-basis: auto = the default size is determined by size of content
 */
-
-/* Desktop */
-/* @media (min-width: 701px) {
-	.main {
-		display: grid;
-		grid-template-columns: 2fr, 1fr;
-		width: 100vw;
-	}
-} */
 
 @media screen and (max-width: 600px) {
 	main.appWrapper {
@@ -304,8 +251,6 @@ flex-basis: auto = the default size is determined by size of content
 	}
 
 	.sidePanel {
-		/* overflow-y: hidden; */
 		min-width: 100%;
-		/* padding: 2rem; */
 	}
 }

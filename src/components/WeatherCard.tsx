@@ -1,11 +1,6 @@
 import React from 'react'
 import styles from './weather.module.css'
 import '../app/globals.css'
-// import sunny from '../../public/icons/day/113.png'
-// import cloudy from '../../public/icons/day/116.png'
-// import snowy from '../../public/icons/day/338.png'
-// import rainy from '../../public/icons/day/308.png'
-// import fallback from '../../public/icons/day/119.png'
 import Image from 'next/image'
 import closeBtn from '../../public/closeBtn.svg'
 
@@ -64,13 +59,14 @@ const WeatherCard = ({ cityName, temperature, currConditionText, deleteCity, cou
 					</small>
 
 					<small>
-						<span>Feels like:&nbsp;{feelslike}&#176;</span>
+						<span>Feels&nbsp;like:&nbsp;{feelslike}&#176;</span>
 						<span className={styles.pipe}>&#x7c;</span>
 						<span>Humidity:&nbsp;{humidity}%</span>
-						<span className={styles.pipe}>&#x7c;</span>
-						<span>Cloud:&nbsp;{cloud}%</span>
-						<span className={styles.pipe}>&#x7c;</span>
-						<span>Wind:&nbsp;{wind}m/s</span>
+						<div>
+							<span>Cloud:&nbsp;{cloud}%</span>
+							<span className={styles.pipe}>&#x7c;</span>
+							<span>Wind:&nbsp;{wind}m/s</span>
+						</div>
 					</small>
 				</div>
 			</div>

@@ -1,6 +1,5 @@
 'use client'
-import sun from '../../public/bgImages/day/sun.jpg'
-import sunnyIcon from '../../public/icons/day/113.png'
+
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import styles from './page.module.css'
@@ -10,8 +9,8 @@ import logoAlster from '../../public/logoAlster.png'
 import React, { useState, useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import Popup from '@/components/Popup'
-import { formatLocalTime } from '../app/utils/dateFormatting'
-import { kphTomps } from '../app/utils/kphTomps'
+import { formatLocalTime } from './utils/dateFormatting'
+import { kphTomps } from './utils/kphTomps'
 import { v4 as uuidv4 } from 'uuid'
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY
@@ -73,33 +72,33 @@ type BannerCity = {
 	}
 }
 
-type CityByIp = {
-	location: {
-		name: string
-		country: string
-		localtime: string
-	}
-	current: {
-		temp_c: number
-		is_day: number
-		feelslike_c: number
-		humidity: number
-		cloud: number
-		wind_kph: number
-		condition: {
-			text: string
-			icon: string
-			code: number
-		}
-	}
-}
+// type CityByIp = {
+// 	location: {
+// 		name: string
+// 		country: string
+// 		localtime: string
+// 	}
+// 	current: {
+// 		temp_c: number
+// 		is_day: number
+// 		feelslike_c: number
+// 		humidity: number
+// 		cloud: number
+// 		wind_kph: number
+// 		condition: {
+// 			text: string
+// 			icon: string
+// 			code: number
+// 		}
+// 	}
+// }
 
 export default function Home() {
 	const [enteredCity, setEnteredCity] = useState<string>('')
 	const [weatherList, setWeatherList] = useState<NewWeatherItem[]>([])
 
-	//eftersom en fetch så kan den vara null, vi måste
-	const [weatherByIp, setWeatherByIp] = useState<CityByIp | null>(null)
+	//eftersom en fetch så kan den vara null
+	const [weatherByIp, setWeatherByIp] = useState<WeatherData | null>(null)
 
 	const [displayInContentContainer, setDisplayInContentContainer] = useState<NewWeatherItem>(weatherByIp)
 
@@ -125,33 +124,73 @@ export default function Home() {
 		const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=auto:ip`)
 		const data = await res.json()
 		console.log('detta är info från ip lookup api', data)
-		if (data.current.is_day) {
-			setIsDay(true)
-		} else {
-			setIsDay(false)
-		}
+
 		setWeatherByIp(data)
+
+		// if (data.current.is_day) {
+		// 	console.log('day day day', data.current.is_day)
+		// 	setIsDay(true)
+		// } else {
+		// 	setIsDay(false)
+		// }
 	}
+
+	// const fetchWeatherByIp = async () => {
+	// 	try {
+	// 		const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=auto:ip`)
+	// 		const data = await res.json()
+	// 		console.log('detta är info från ip lookup api', data)
+	// 		if (
+	// 			data &&
+	// 			data.location &&
+	// 			data.location.name &&
+	// 			data.location.country &&
+	// 			data.current &&
+	// 			data.current.temp_c !== undefined &&
+	// 			data.current.temp_c !== null &&
+	// 			data.current.condition &&
+	// 			data.current.condition.text &&
+	// 			data.current.condition.icon &&
+	// 			data.current.condition.cod &&
+	// 			data.current.is_day !== undefined &&
+	// 			data.current.is_day !== null
+	// 		) {
+	// 			setWeatherByIp(data)
+	// 		}
+
+	// 		if (data.current.is_day) {
+	// 			console.log('day day day', data.current.is_day)
+	// 			setIsDay(true)
+	// 		} else {
+	// 			setIsDay(false)
+	// 		}
+	// 	} catch (error) {
+	// 		console.error('Error', error)
+	// 	}
+	// }
+
 	//RETRIEVE FROM LOCAL STORAGE
 	//När jag körde Array.isArray(storedItemsArray) i stället för att först sätta setWeatherList(storedItemsArray) följt av
 	//Array.isArray(weatherList) så fick jag plötsligt ut items med console.log(storedItemsArray).
 	useEffect(() => {
 		const getInitialData = async () => {
+			console.log('hellooooooo')
+			//fetchWeatherByIp är async så då måste vi awaita den här:
 			await fetchWeatherByIp()
-			const storedItems = localStorage.getItem('weatherList')
-			const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
-			Array.isArray(storedItemsArray) &&
-				weatherList.forEach((item) => {
-					getCurrentWeather(item.id)
-				})
-			setWeatherList(storedItemsArray)
-			console.log('Stored Items Array', storedItemsArray)
+			if (localStorage.length !== 0) {
+				const storedItems = localStorage.getItem('weatherList')
+				const storedItemsArray = storedItems ? JSON.parse(storedItems) : []
+				Array.isArray(storedItemsArray) && setWeatherList(storedItemsArray)
+				console.log('Stored Items Array', storedItemsArray)
+			} else {
+				console.log('')
+			}
 		}
 		getInitialData()
 	}, [])
 
 	useEffect(() => {
-		// Check if weatherByIp has data and set it as the initial content
+		// Check if weatherByIp finns och har properties och set it as the initial content
 		if (weatherByIp && Object.keys(weatherByIp).length > 0) {
 			setDisplayInContentContainer({
 				id: uuidv4(),
@@ -169,6 +208,11 @@ export default function Home() {
 				wind: parseFloat(kphTomps(weatherByIp.current.wind_kph)),
 			})
 		}
+		if (isDay) {
+			setIsDay(true)
+		} else {
+			setIsDay(false)
+		}
 	}, [weatherByIp])
 
 	//Add weatherList array to local storage
@@ -184,7 +228,7 @@ export default function Home() {
 		if (weatherData && weatherData.location && weatherData.location.name && weatherData.location.country) {
 			console.log('Weather data:', weatherData)
 			addCity()
-			addCityToContentContainer()
+			// addCityToContentContainer()
 			return
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -298,6 +342,7 @@ export default function Home() {
 			temperature: weatherData?.current.temp_c,
 			currConditionText: weatherData?.current.condition.text,
 			currConditionCode: weatherData?.current.condition.code,
+			currConditionIcon: weatherData?.current.condition.icon,
 			isDay: weatherData?.current.is_day,
 			localTime: formatLocalTime(weatherData?.location.localtime),
 			feelslike: weatherData?.current.feelslike_c,
@@ -311,29 +356,30 @@ export default function Home() {
 		setWeatherList(updatedWeatherList)
 		// localStorage.setItem('weatherList', JSON.stringify(weatherList))
 		localStorage.setItem('weatherList', JSON.stringify(updatedWeatherList))
-	}
-
-	const addCityToContentContainer = () => {
-		const newWeatherItem = {
-			id: uuidv4(),
-			cityName: weatherData?.location.name,
-			country: weatherData?.location.country,
-			temperature: weatherData?.current.temp_c,
-			currConditionText: weatherData?.current.condition.text,
-			currConditionCode: weatherData?.current.condition.code,
-			currConditionIcon: weatherData?.current.condition.icon,
-			isDay: weatherData?.current.is_day,
-			localTime: formatLocalTime(weatherData?.location.localtime),
-			feelslike: weatherData?.current.feelslike_c,
-			humidity: weatherData?.current.humidity,
-			cloud: weatherData?.current.cloud,
-			wind: kphTomps(weatherData?.current.wind_kph),
-		}
-
-		//Save to variable for displaying in content container without saving to local storage
 		setDisplayInContentContainer(newWeatherItem)
-		console.log('detta är displayContentContainer', displayInContentContainer)
 	}
+
+	// const addCityToContentContainer = () => {
+	// 	const newWeatherItem = {
+	// 		id: uuidv4(),
+	// 		cityName: weatherData?.location.name,
+	// 		country: weatherData?.location.country,
+	// 		temperature: weatherData?.current.temp_c,
+	// 		currConditionText: weatherData?.current.condition.text,
+	// 		currConditionCode: weatherData?.current.condition.code,
+	// 		currConditionIcon: weatherData?.current.condition.icon,
+	// 		isDay: weatherData?.current.is_day,
+	// 		localTime: formatLocalTime(weatherData?.location.localtime),
+	// 		feelslike: weatherData?.current.feelslike_c,
+	// 		humidity: weatherData?.current.humidity,
+	// 		cloud: weatherData?.current.cloud,
+	// 		wind: kphTomps(weatherData?.current.wind_kph),
+	// 	}
+
+	// 	//Save to variable for displaying in content container without saving to local storage
+	// 	setDisplayInContentContainer(newWeatherItem)
+	// 	console.log('detta är displayContentContainer', displayInContentContainer)
+	// }
 
 	//DELETE CITY
 	const deleteCity = (id: string | undefined) => {
@@ -579,12 +625,13 @@ export default function Home() {
 						return '/bgImages/night/night-thunder.jpg'
 						break
 					default:
-						return '/bgImages/night/night-partly-cloudy.jpg'
+						return '/bgImages/night/night-cloud.jpg'
 				}
 		}
 	}
 
 	let backgroundImage = getBackgroundImage(isDay)
+	// let backgroundImage = getBackgroundImage(isDay) || '/bgImages/day/cloud.jpg'
 
 	return (
 		<main className={styles.appWrapper} style={{ backgroundImage: `url(${backgroundImage})` }}>

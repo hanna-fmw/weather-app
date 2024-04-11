@@ -26,6 +26,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='en' className={roboto.className}>
+			
 			<body className={rubik.className}>{children}</body>
 		</html>
 	)

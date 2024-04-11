@@ -1,66 +1,73 @@
 import React from 'react'
 import styles from './weather.module.css'
 import '../app/globals.css'
-import sunny from '../../public/sun.svg'
-import cloudy from '../../public/cloud.svg'
-import snowy from '../../public/snow.svg'
-import fallback from '../../public/fallback.svg'
 import Image from 'next/image'
 import closeBtn from '../../public/closeBtn.svg'
 
 type City = {
 	cityName?: string
 	temperature?: number
-	currCondition?: string
+	currConditionText?: string
 	country?: string
+	isDay?: number
 	deleteCity: () => void
+	localTime?: string
+	feelslike?: number
+	humidity?: number
+	cloud?: number
+	wind?: number
 }
 
-const WeatherCard = ({ cityName, temperature, currCondition, deleteCity, country }: City) => {
+const WeatherCard = ({ cityName, temperature, currConditionText, deleteCity, country, localTime, feelslike, humidity, cloud, wind }: City) => {
 	// console.log(currCondition)
 	//Background colors
 	const highTemp = temperature && temperature > 19
 	//Blue background
-	const lowTempOrRain = (temperature && temperature < 1) || currCondition?.toLowerCase().includes('rain')
+	const lowTempOrRain = (temperature && temperature < 1) || currConditionText?.toLowerCase().includes('rain')
 	//Else (i.e. 1-19 degrees and no rain) yellow background
 
 	return (
 		<div className={`${highTemp ? styles.bgHighTemp : lowTempOrRain ? styles.bgLowTemp : styles.bgModerateTemp} ${styles.card}`}>
 			<div className={styles.closeBtn}>
-				<Image src={closeBtn} width={30} height={30} alt='Close Button' onClick={deleteCity} />
+				<Image src={closeBtn} width={20} height={20} alt='Close Button' onClick={deleteCity} />
 			</div>
 
 			{/* <div>
-				{(() => {
-					if (currCondition && currCondition.toLowerCase().includes('sunny')) {
-						return <Image src={sunny} height={60} width={60} alt='Sunny Weather icon' />
-					} else if (currCondition && currCondition.toLowerCase().includes('cloudy')) {
-						return <Image src={cloudy} height={60} width={60} alt='Cloudy Weather icon' />
-					} else if (currCondition && currCondition.toLowerCase().includes('snowy')) {
-						return <Image src={snowy} height={60} width={60} alt='Snowy Weather icon' />
-					} else {
-						return <Image src={fallback} height={60} width={60} alt='Fallback Weather icon' />
-					}
-				})()}
+				{currConditionText &&
+					(currConditionText.toLowerCase().includes('sunny') ? (
+						<Image src={sunny} height={30} width={30} alt='Sunny Weather icon' />
+					) : currConditionText.toLowerCase().includes('cloud') ? (
+						<Image src={cloudy} height={30} width={30} alt='Cloudy Weather icon' />
+					) : currConditionText.toLowerCase().includes('snow') ? (
+						<Image src={snowy} height={30} width={30} alt='Snowy Weather icon' />
+					) : currConditionText.toLowerCase().includes('rain') ? (
+						<Image src={rainy} height={30} width={30} alt='Rainy Weather icon' />
+					) : (
+						<Image src={fallback} height={30} width={30} alt='Fallback Weather icon' />
+					))}
 			</div> */}
 
 			<div>
-				{currCondition &&
-					(currCondition.toLowerCase().includes('sunny') ? (
-						<Image src={sunny} height={60} width={60} alt='Sunny Weather icon' />
-					) : currCondition.toLowerCase().includes('cloudy') ? (
-						<Image src={cloudy} height={60} width={60} alt='Cloudy Weather icon' />
-					) : currCondition.toLowerCase().includes('snowy') ? (
-						<Image src={snowy} height={60} width={60} alt='Snowy Weather icon' />
-					) : (
-						<Image src={fallback} height={60} width={60} alt='Fallback Weather icon' />
-					))}
-			</div>
+				<span className={styles.temp}>{temperature}°C</span>
+				<span className={styles.cityName}>{cityName}</span>
+				<span className={styles.country}>({country})</span>
+				<div className={styles.weatherDetails}>
+					<small>
+						<span>{localTime}</span>
+						<span className={styles.pipe}>&#x7c;</span>
+						<span>{currConditionText}</span>
+					</small>
 
-			<div>
-				<span>{temperature}°C</span>
-				<div>
-					{cityName} ({country})
+					<small>
+						<span>Feels&nbsp;like:&nbsp;{feelslike}&#176;</span>
+						<span className={styles.pipe}>&#x7c;</span>
+						<span>Humidity:&nbsp;{humidity}%</span>
+						<div>
+							<span>Cloud:&nbsp;{cloud}%</span>
+							<span className={styles.pipe}>&#x7c;</span>
+							<span>Wind:&nbsp;{wind}m/s</span>
+						</div>
+					</small>
 				</div>
 			</div>
 		</div>

@@ -1,20 +1,118 @@
-/* .header {
+main.appWrapper {
 	display: flex;
 	justify-content: space-between;
-	align-items: flex-start;
-	gap: 4rem;
-} */
-
-.header {
-	margin-bottom: 1rem;
+	width: 100vw;
+	height: 100vh;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: #fff;
+	position: relative;
+	transition: 500ms;
 }
 
-.checkbox[type='checkbox'] {
-	accent-color: #808080;
+.appWrapper::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 0;
+}
+
+.container {
+	width: 60vw;
+	padding: 2rem;
+}
+
+.bannerContainer {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 0.2rem;
+}
+
+.bannerItems {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+}
+
+.contentContainer {
+	height: 80vh;
+	display: flex;
+	align-items: flex-end;
+	padding-bottom: 2rem;
+}
+
+.tempContainer {
+	display: flex;
+	flex-direction: flex-end;
+}
+
+.cityDetails {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-end;
+	height: 100%;
+	width: 100%;
+	gap: 6rem;
+	z-index: 10;
+}
+
+.cityTemp {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	align-items: flex-start;
+	padding-left: 1.5rem;
+}
+
+h1.temp {
+	font-size: 7rem;
+	margin: 0;
+}
+
+h1.cityName {
+	font-size: 3rem;
+	margin-bottom: 0.7rem;
+}
+
+.weatherDetails {
+	list-style-type: none;
+	font-size: 0.9rem;
+}
+
+.sidePanel {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 40vw;
+	max-width: 40vw;
+	height: 100vh;
+	background-color: rgba(110, 110, 110, 0.25);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+	backdrop-filter: blur(10px);
+	border: 1 px solid rgba(255, 255, 255, 0.18);
+	z-index: 10;
+	padding: 3rem 2rem;
+	overflow-y: scroll;
+}
+
+.sidePanelHeader {
+	display: flex;
+	justify-content: space-between;
+}
+
+.sidePanelCards {
+	display: flex;
+	flex-direction: column;
 }
 
 .inputContainer {
 	display: flex;
+<<<<<<< HEAD
 	padding: 20px 30px;
 	align-items: center;
 	border-radius: 5px;
@@ -28,23 +126,43 @@
 	border: 1px black solid;
 	padding: 1rem;
 	background-color: rgb(50, 48, 48, 0.4);
+=======
+	flex-direction: column;
+	margin-top: 3rem;
+	margin-bottom: 5rem;
 }
+
+.inputField {
+	width: 100%;
+	border: none;
+	padding: 0 1rem 0.5rem 0;
+	border-bottom: 1px #ccc solid;
+	background: none;
+	color: #ccc;
+	cursor: pointer;
+	font-size: 1.1rem;
+	margin-bottom: 3px;
+>>>>>>> a9c3d6ecdbef7eca2202ada0e72862e52c18a71b
+}
+/* any change to the properties specified within the .inputField class will
+take 0.4 seconds to complete. In this case, if there is a
+change in properties like background-color, color, or 
+font-size, the transition effect will occur over the 
+specified duration. */
 
 .inputField:focus {
 	outline: none;
 }
 
-.labelModeCheckbox {
-	font-weight: 600;
-	font-size: 14px;
-	margin-right: 0.8rem;
+.inputField::placeholder {
+	color: #ccc;
 }
 
-.label {
-	font-weight: 700;
-	margin-right: 0.8rem;
+.inputField:hover::placeholder {
+	color: #333;
 }
 
+<<<<<<< HEAD
 /* .logoAlster {
 	margin-top: 2rem;
 } */
@@ -54,12 +172,32 @@
 	border: none;
 	cursor: pointer;
 } */
+=======
+.logoAlster {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+}
+
+.delAllBtn {
+	background-color: rgba(18, 18, 18, 0.25);
+	padding: 0.4rem;
+	border: none;
+	cursor: pointer;
+	color: #ccc;
+	margin-left: 1.1rem;
+}
+>>>>>>> a9c3d6ecdbef7eca2202ada0e72862e52c18a71b
 
 .dataResult {
 	margin-top: 5px;
 	width: 300px;
 	height: 200px;
+<<<<<<< HEAD
 	background-color: rgb(200, 200, 200);
+=======
+	background-color: rgba(110, 110, 110, 0.65);
+>>>>>>> a9c3d6ecdbef7eca2202ada0e72862e52c18a71b
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 	overflow: hidden;
 	overflow-y: auto;
@@ -67,31 +205,18 @@
 	top: 0;
 }
 
-.dataResult .dataItem {
-	width: 100%;
-	height: 50px;
-	display: flex;
-	align-items: center;
-	color: black;
-}
-
-.dataItem {
-	margin-left: 10px;
-	line-height: 1.3;
-}
-
-.dataItem:hover {
-	background-color: lightgrey;
-	cursor: pointer;
+.searchListItem {
+	color: #ccc;
 }
 
 .searchListItem:hover {
-	background: lightgrey;
+	background-color: rgba(37, 37, 36, 0.4);
 	cursor: pointer;
 }
 
 .searchListItem.active {
-	background: lightgrey;
+	transition: ease-in 400ms;
+	background-color: rgba(37, 37, 36, 0.4);
 }
 
 .bannerContainer {

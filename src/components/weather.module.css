@@ -1,29 +1,43 @@
 .card {
 	display: flex;
-	color: white;
-	padding: 30px;
+	color: #ccc;
+	padding: 1.5rem;
 	border-radius: 2px;
-	gap: 2rem;
 	margin: 1rem;
+	gap: 2rem;
 	position: relative;
-	min-width: 320px;
 }
 
 .closeBtn {
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	top: 0.6rem;
+	right: 0.6rem;
 	cursor: pointer;
 }
 
 .temp {
-	font-size: 46px;
-	font-weight: 500;
+	font-size: 1.2rem;
+	font-weight: 400;
+	display: inline-block;
+	margin-right: 0.2rem;
 }
 
-.city {
-	font-size: 0.9rem;
-	font-weight: 900;
+.cityName,
+.country {
+	font-size: 1rem;
+	font-weight: 400;
+	margin-right: 0.2rem;
+}
+
+.weatherDetails {
+	display: flex;
+	flex-direction: column;
+	margin-top: 0.8rem;
+}
+
+.pipe {
+	margin-right: 0.5rem;
+	margin-left: 0.5rem;
 }
 
 .bgHighTemp {

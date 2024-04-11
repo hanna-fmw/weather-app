@@ -112,21 +112,6 @@ h1.cityName {
 
 .inputContainer {
 	display: flex;
-<<<<<<< HEAD
-	padding: 20px 30px;
-	align-items: center;
-	border-radius: 5px;
-	/* max-width: fit-content; */
-	background-color: rgb(50, 48, 48, 0.4);
-	margin-bottom: 0.8rem;
-	position: relative;
-}
-
-.inputField {
-	border: 1px black solid;
-	padding: 1rem;
-	background-color: rgb(50, 48, 48, 0.4);
-=======
 	flex-direction: column;
 	margin-top: 3rem;
 	margin-bottom: 5rem;
@@ -142,7 +127,6 @@ h1.cityName {
 	cursor: pointer;
 	font-size: 1.1rem;
 	margin-bottom: 3px;
->>>>>>> a9c3d6ecdbef7eca2202ada0e72862e52c18a71b
 }
 /* any change to the properties specified within the .inputField class will
 take 0.4 seconds to complete. In this case, if there is a
@@ -162,17 +146,6 @@ specified duration. */
 	color: #333;
 }
 
-<<<<<<< HEAD
-/* .logoAlster {
-	margin-top: 2rem;
-} */
-
-/* .btn {
-	background-color: transparent;
-	border: none;
-	cursor: pointer;
-} */
-=======
 .logoAlster {
 	position: absolute;
 	top: 1rem;
@@ -187,17 +160,12 @@ specified duration. */
 	color: #ccc;
 	margin-left: 1.1rem;
 }
->>>>>>> a9c3d6ecdbef7eca2202ada0e72862e52c18a71b
 
 .dataResult {
 	margin-top: 5px;
 	width: 300px;
 	height: 200px;
-<<<<<<< HEAD
-	background-color: rgb(200, 200, 200);
-=======
 	background-color: rgba(110, 110, 110, 0.65);
->>>>>>> a9c3d6ecdbef7eca2202ada0e72862e52c18a71b
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 	overflow: hidden;
 	overflow-y: auto;

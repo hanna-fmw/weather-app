@@ -1,14 +1,13 @@
-'use client'
-import React from 'react'
-import styles from './navbar.module.css'
-import logoAlster from '../../public/logoAlster.png'
-import Image from 'next/image'
+'use client';
+import React from 'react';
+import styles from './navbar.module.css';
+import logoAlster from '../../public/logoAlster.png';
+import Image from 'next/image';
 
 const Navbar = () => {
-	// //Clear Local Storage
 	const clearLocalStorage = () => {
-		localStorage.clear()
-	}
+		localStorage.clear();
+	};
 
 	return (
 		<nav className={styles.navbar}>
@@ -25,7 +24,7 @@ const Navbar = () => {
 				</button>
 			</div>
 		</nav>
-	)
-}
+	);
+};
 
-export default Navbar
+export default Navbar;

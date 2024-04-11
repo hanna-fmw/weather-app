@@ -149,6 +149,7 @@ export default function Home() {
 		} else {
 			setIsDay(false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [weatherByIp]);
 
 	useEffect(() => {
@@ -375,6 +376,7 @@ export default function Home() {
 			}
 		};
 		getBannerCities();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const clearLocalStorage = () => {

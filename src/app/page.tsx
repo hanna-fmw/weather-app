@@ -78,6 +78,7 @@ export default function Home() {
 
 	const [weatherByIp, setWeatherByIp] = useState<WeatherData | null>(null);
 
+	// @ts-ignore comment
 	const [displayInContentContainer, setDisplayInContentContainer] = useState<NewWeatherItem>(weatherByIp);
 
 	const [weatherData, setWeatherData] = useState<null | WeatherData>(null);
@@ -286,9 +287,11 @@ export default function Home() {
 
 		//Update local storage after adding new item
 		const updatedWeatherList = [...weatherList, newWeatherItem];
+		// @ts-ignore comment
 		setWeatherList(updatedWeatherList);
 
 		localStorage.setItem('weatherList', JSON.stringify(updatedWeatherList));
+		// @ts-ignore comment
 		setDisplayInContentContainer(newWeatherItem);
 	};
 

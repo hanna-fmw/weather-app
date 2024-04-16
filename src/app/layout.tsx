@@ -26,19 +26,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='en' className={roboto.className}>
-			<head>
-				{/* Other head elements */}
-				<script
-					dangerouslySetInnerHTML={{
-						__html: `
-                            if (!sessionStorage.getItem('pageLoaded')) {
-                                sessionStorage.setItem('pageLoaded', 'true');
-                                window.location.reload();
-                            }
-                        `,
-					}}
-				/>
-			</head>
 			<body className={rubik.className}>{children}</body>
 		</html>
 	);

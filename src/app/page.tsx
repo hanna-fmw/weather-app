@@ -362,8 +362,7 @@ export default function Home() {
 			try {
 				const promises = animatedBannerCities.map(async (bannerCity) => {
 					const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${bannerCity.id}`);
-					//Stockholm: 2280360
-					//9ec16cfb15ce4a1e88484621232211
+
 					const data = await res.json();
 
 					return { ...data, city: bannerCity.name };

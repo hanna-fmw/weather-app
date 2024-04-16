@@ -100,7 +100,7 @@ export default function Home() {
 	const [isDay, setIsDay] = useState<boolean>(false);
 
 	const fetchWeatherByIp = async () => {
-		const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=auto:ip`);
+		const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=auto:ip`);
 		const data = await res.json();
 		console.log('detta är info från ip lookup api', data);
 

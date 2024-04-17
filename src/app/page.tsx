@@ -102,7 +102,7 @@ export default function Home() {
 	const fetchWeatherByIp = async () => {
 		const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=auto:ip`);
 		const data = await res.json();
-		console.log('detta är info från ip lookup api', data);
+		// console.log('Data from ip lookup api', data);
 
 		setWeatherByIp(data);
 	};
@@ -110,14 +110,14 @@ export default function Home() {
 	//RETRIEVE FROM LOCAL STORAGE
 	useEffect(() => {
 		const getInitialData = async () => {
-			console.log('hellooooooo');
+			// console.log('getting initial data');
 			//fetchWeatherByIp är async så då måste vi awaita den här:
 			await fetchWeatherByIp();
 			if (localStorage.length !== 0) {
 				const storedItems = localStorage.getItem('weatherList');
 				const storedItemsArray = storedItems ? JSON.parse(storedItems) : [];
 				Array.isArray(storedItemsArray) && setWeatherList(storedItemsArray);
-				console.log('Stored Items Array', storedItemsArray);
+				// console.log('Stored Items Array', storedItemsArray);
 			} else {
 				console.log('');
 			}
@@ -156,13 +156,13 @@ export default function Home() {
 		if (weatherList.length !== 0) {
 			const updatedWeatherList = weatherList.sort((a, b) => (a.temperature && b.temperature ? a.temperature - b.temperature : 0));
 			setWeatherList(updatedWeatherList);
-			console.log('Weather list:', weatherList);
+			// console.log('Weather list:', weatherList);
 		}
 	}, [weatherList]);
 
 	useEffect(() => {
 		if (weatherData && weatherData.location && weatherData.location.name && weatherData.location.country) {
-			console.log('Weather data:', weatherData);
+			// console.log('Weather data:', weatherData);
 			addCity();
 			return;
 		}
@@ -184,7 +184,7 @@ export default function Home() {
 			const cityData = await res.json();
 			setCityItems(cityData);
 			setActiveItem(0);
-			console.log('City items list', cityItems);
+			// console.log('City items list', cityItems);
 			return cityData;
 		} catch (error) {
 			console.error('Error:', error);
@@ -193,9 +193,9 @@ export default function Home() {
 
 	//Fetch from "current" endpoint and pass in id from Search API response
 	const getCurrentWeather = async (cityObject: any) => {
-		console.log('city object', cityObject);
+		// console.log('city object', cityObject);
 
-		console.log('cityItems', cityItems);
+		// console.log('cityItems', cityItems);
 		const alreadyAdded = weatherList.some((weatherItem) => weatherItem.cityName === cityObject.name && weatherItem.country === cityObject.country);
 		if (alreadyAdded) {
 			timeoutAlreadyAdded();
@@ -232,7 +232,7 @@ export default function Home() {
 					setIsDay(false);
 				}
 
-				console.log('Weather Data', weatherData);
+				// console.log('Weather Data', weatherData);
 
 				return data;
 			} catch (error) {

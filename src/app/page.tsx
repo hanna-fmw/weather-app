@@ -100,7 +100,7 @@ export default function Home() {
 	const [isDay, setIsDay] = useState<boolean>(false);
 
 	const fetchWeatherByIp = async () => {
-		const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=auto:ip`);
+		const res = await fetch(`https://cors-anywhere.herokuapp.com/https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=auto:ip`);
 		const data = await res.json();
 		console.log('detta är info från ip lookup api', data);
 
@@ -180,7 +180,7 @@ export default function Home() {
 
 	const searchCity = async (cityName: string) => {
 		try {
-			const res = await fetch(`//api.weatherapi.com/v1/search.json?key=${apiKey}&q=${cityName}`);
+			const res = await fetch(`https://cors-anywhere.herokuapp.com/https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${cityName}`);
 			const cityData = await res.json();
 			setCityItems(cityData);
 			setActiveItem(0);
@@ -202,7 +202,7 @@ export default function Home() {
 			setCityItems([]);
 		} else {
 			try {
-				const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${cityObject.id}`);
+				const res = await fetch(`https://cors-anywhere.herokuapp.com/https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${cityObject.id}`);
 				const data = await res.json();
 
 				if (
@@ -361,7 +361,10 @@ export default function Home() {
 		const getBannerCities = async () => {
 			try {
 				const promises = animatedBannerCities.map(async (bannerCity) => {
-					const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${bannerCity.id}`);
+					// const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${bannerCity.id}`);
+					const res = await fetch(
+						`https://cors-anywhere.herokuapp.com/https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${bannerCity.id}`
+					);
 
 					const data = await res.json();
 

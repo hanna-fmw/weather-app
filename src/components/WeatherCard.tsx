@@ -19,22 +19,15 @@ type City = {
 	wind?: number;
 };
 
-const WeatherCard = ({ cityName, temperature, currConditionText, deleteCity, country, localTime, feelslike, humidity, cloud, wind }: City) => {
-	//Background colors
-	const highTemp = temperature && temperature > 19;
-	//Blue background
-	const lowTempOrRain = (temperature && temperature < 1) || currConditionText?.toLowerCase().includes('rain');
-
+const WeatherCard = ({ cityName, deleteCity, country }: City) => {
 	return (
-		<div className={`${highTemp ? styles.bgHighTemp : lowTempOrRain ? styles.bgLowTemp : styles.bgModerateTemp} ${styles.card}`}>
+		<div className={styles.card}>
 			<div className={styles.previousSearches}>
 				<span className={styles.cityName}>{cityName}</span>
 				<span className={styles.pipe}>&#x7c;</span>
 				<span className={styles.country}>{country}</span>
 			</div>
-
 			<IoIosClose onClick={deleteCity} className={styles.closeBtn} />
-			{/* <Image src={closeBtn} width={20} height={20} alt='Close Button' onClick={deleteCity} /> */}
 		</div>
 	);
 };

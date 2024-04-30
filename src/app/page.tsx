@@ -110,8 +110,6 @@ export default function Home() {
 	//RETRIEVE FROM LOCAL STORAGE
 	useEffect(() => {
 		const getInitialData = async () => {
-			// console.log('getting initial data');
-			//fetchWeatherByIp är async så då måste vi awaita den här:
 			await fetchWeatherByIp();
 			if (localStorage.length !== 0) {
 				const storedItems = localStorage.getItem('weatherList');
@@ -126,7 +124,6 @@ export default function Home() {
 	}, []);
 
 	useEffect(() => {
-		// Check if weatherByIp finns och har properties och set it as the initial content
 		if (weatherByIp && Object.keys(weatherByIp).length > 0) {
 			setDisplayInContentContainer({
 				id: uuidv4(),
@@ -156,13 +153,11 @@ export default function Home() {
 		if (weatherList.length !== 0) {
 			const updatedWeatherList = weatherList.sort((a, b) => (a.temperature && b.temperature ? a.temperature - b.temperature : 0));
 			setWeatherList(updatedWeatherList);
-			// console.log('Weather list:', weatherList);
 		}
 	}, [weatherList]);
 
 	useEffect(() => {
 		if (weatherData && weatherData.location && weatherData.location.name && weatherData.location.country) {
-			// console.log('Weather data:', weatherData);
 			addCity();
 			return;
 		}
@@ -184,18 +179,13 @@ export default function Home() {
 			const cityData = await res.json();
 			setCityItems(cityData);
 			setActiveItem(0);
-			// console.log('City items list', cityItems);
 			return cityData;
 		} catch (error) {
 			console.error('Error:', error);
 		}
 	};
 
-	//Fetch from "current" endpoint and pass in id from Search API response
 	const getCurrentWeather = async (cityObject: any) => {
-		// console.log('city object', cityObject);
-
-		// console.log('cityItems', cityItems);
 		const alreadyAdded = weatherList.some((weatherItem) => weatherItem.cityName === cityObject.name && weatherItem.country === cityObject.country);
 		if (alreadyAdded) {
 			timeoutAlreadyAdded();
@@ -231,8 +221,6 @@ export default function Home() {
 				} else {
 					setIsDay(false);
 				}
-
-				// console.log('Weather Data', weatherData);
 
 				return data;
 			} catch (error) {
@@ -349,52 +337,10 @@ export default function Home() {
 		}
 	};
 
-	// const animatedBannerCities = [
-	// 	{ id: '2618724', name: 'New York' },
-	// 	{ id: '2280360', name: 'Stockholm' },
-	// 	{ id: '3125553', name: 'Tokyo' },
-	// 	{ id: '714482', name: 'Madrid' },
-	// 	{ id: '2267741', name: 'Järvsö' },
-	// ];
-
-	// useEffect(() => {
-	// 	const getBannerCities = async () => {
-	// 		try {
-	// 			const promises = animatedBannerCities.map(async (bannerCity) => {
-	// 				const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${bannerCity.id}`);
-
-	// 				const data = await res.json();
-
-	// 				return { ...data, city: bannerCity.name };
-	// 			});
-
-	// 			const bannerCityResults = await Promise.all(promises);
-	// 			setBannerCities(bannerCityResults);
-	// 		} catch (error) {
-	// 			console.error('Error:', error);
-	// 		}
-	// 	};
-	// 	getBannerCities();
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, []);
-
 	const clearLocalStorage = () => {
 		localStorage.clear();
 		setWeatherList([]);
 	};
-
-	// const bannerVariants = {
-	// 	animate: {
-	// 		y: ['-10vh', '1.5vh'],
-	// 		transition: {
-	// 			y: {
-	// 				repeatType: 'loop',
-	// 				duration: 2,
-	// 				ease: 'linear',
-	// 			},
-	// 		},
-	// 	},
-	// };
 
 	const getBackgroundImage = (isDay: boolean) => {
 		let timeOfDay = isDay ? 'day' : 'night';

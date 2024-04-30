@@ -36,10 +36,6 @@
 }
 
 @media (min-width: 768px) {
-	/* .temp {
-		font-size: 1.2rem;
-	} */
-
 	.cityName,
 	.country {
 		font-size: 0.8rem;

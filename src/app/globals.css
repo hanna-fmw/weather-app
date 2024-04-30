@@ -12,41 +12,10 @@
 	--foreground-rgb: 0, 0, 0;
 }
 
-/* @media (prefers-color-scheme: dark) {
-	:root {
-		--foreground-rgb: 200, 200, 200;
-	}
-} */
-
 body {
 	color: rgb(var(--foreground-rgb));
 	background-image: url('../../public/bgImages/day/cloud.jpg');
 	width: 100vw;
-	height: auto;
+
+	font-family: rubik, sans-serif;
 }
-
-/* body:has(input:checked) {
-	background-color: #232323;
-	color: #808080;
-} */
-
-h1 {
-	font-size: 1.5rem;
-	font-weight: 700;
-	margin-bottom: 1rem;
-}
-
-/* main { */
-/* background-color: rgb(154, 201, 123); */
-/* width: 100vw;
-	display: flex; */
-
-/* padding: 2rem;
- }
-
-footer {
-	/* flex-shrink: 0; */
-/* padding: 20px;
-	border-bottom: 1px solid rgba(18, 18, 18, 0.4); */
-/* margin-top: auto; */
-/* } */

@@ -1,116 +1,69 @@
-/* main.appWrapper {
-	display: flex;
-	justify-content: space-between;
-	width: 100vw;
-	height: 100vh;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-	color: #fff;
-	position: relative;
-	transition: 500ms;
-}
-
-.appWrapper::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.3);
-	z-index: 0;
-} */
-
-/* .container {
-	width: 100vw;
-	padding: 2rem;
-} */
-
-/* .bannerContainer {
-	display: flex;
-
-	justify-content: space-between;
-	margin-top: 0.2rem;
-} */
-
-/* .bannerItems {
-	display: flex;
-	width: 100%;
-	justify-content: space-between;
-} */
-
 .main {
 	width: 100%;
 	height: 100vh;
 }
 
 .container {
-	/* height: 80vh; */
+	width: 100%;
 	display: flex;
+	flex-direction: column;
 	align-items: flex-start;
-	padding-bottom: 2rem;
+	padding: 2rem 1rem;
 }
 
-.tempContainer {
-	display: flex;
-	flex-direction: flex-end;
-}
-
-.cityDetails {
+.weatherInfoContainer {
 	display: flex;
 	justify-content: flex-start;
-	align-items: flex-end;
-	height: 100%;
-	width: 100%;
-	gap: 6rem;
-	z-index: 10;
+	align-items: center;
+	gap: 0.8rem;
+	color: #fff;
+	padding-bottom: 0.5rem;
 }
 
 .cityTemp {
+	font-size: 3.5rem;
+}
+
+.cityName {
+	font-size: 1.5rem;
+}
+
+.localTime {
+	font-size: 0.6rem;
+}
+
+.weatherIcon {
+	width: 2rem;
+	height: 2rem;
+}
+
+.weatherCondition {
+	font-size: 0.6rem;
+}
+
+.weatherDetailsContainer {
 	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
-	align-items: flex-start;
-	padding-left: 1.5rem;
-}
-
-h1.temp {
-	font-size: 7rem;
-	margin: 0;
-}
-
-h1.cityName {
-	font-size: 3rem;
-	margin-bottom: 0.7rem;
-}
-
-.weatherDetails {
-	list-style-type: none;
-	font-size: 0.9rem;
+	justify-content: flex-start;
+	gap: 0.8rem;
+	color: #fff;
+	padding-bottom: 0.5rem;
+	font-size: 0.8rem;
 }
 
 .sidePanel {
 	position: absolute;
-	top: 50%;
+	top: 40%;
 	right: 0;
 	width: 100vw;
 	height: 100%;
-	/* max-width: 40vw; */
-	/* height: 100vh; */
 	background-color: rgba(110, 110, 110, 0.25);
 	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 	backdrop-filter: blur(10px);
 	border: 1 px solid rgba(255, 255, 255, 0.18);
 	z-index: 10;
-	padding: 3rem 2rem;
+	padding: 1rem 2rem;
 	overflow-y: scroll;
 }
-
-/* .sidePanelHeader {
-	display: flex;
-	justify-content: space-between;
-} */
 
 .sidePanelCards {
 	display: flex;
@@ -120,43 +73,32 @@ h1.cityName {
 .inputContainer {
 	display: flex;
 	flex-direction: column;
-	margin-top: 3rem;
-	margin-bottom: 5rem;
+	margin-top: 2rem;
+	margin-bottom: 1rem;
 }
 
 .inputField {
 	width: 100%;
 	border: none;
 	padding: 0 1rem 0.5rem 0;
-	border-bottom: 1px #ccc solid;
+	border-bottom: 1px #fff solid;
 	background: none;
-	color: #ccc;
+	color: #fff;
 	cursor: pointer;
-	font-size: 1.1rem;
+	font-size: 0.8rem;
 	margin-bottom: 3px;
 }
-/* any change to the properties specified within the .inputField class will
-take 0.4 seconds to complete. In this case, if there is a
-change in properties like background-color, color, or 
-font-size, the transition effect will occur over the 
-specified duration. */
 
 .inputField:focus {
 	outline: none;
 }
 
 .inputField::placeholder {
-	color: #ccc;
+	color: #fff;
 }
 
 .inputField:hover::placeholder {
 	color: #333;
-}
-
-.logoAlster {
-	position: absolute;
-	top: 1rem;
-	right: 1rem;
 }
 
 .delAllBtn {
@@ -164,8 +106,9 @@ specified duration. */
 	padding: 0.4rem;
 	border: none;
 	cursor: pointer;
-	color: #ccc;
-	margin-left: 1.1rem;
+	color: #fff;
+	font-size: 0.8rem;
+	margin-bottom: 2rem;
 }
 
 .dataResult {
@@ -181,7 +124,8 @@ specified duration. */
 }
 
 .searchListItem {
-	color: #ccc;
+	color: #fff;
+	font-size: 0.8rem;
 }
 
 .searchListItem:hover {
@@ -194,51 +138,13 @@ specified duration. */
 	background-color: rgba(37, 37, 36, 0.4);
 }
 
-.bannerContainer {
-	display: flex;
-	flex-direction: row;
-	gap: 4rem;
-	/* width: calc(100vw - 1 * 1rem); */
-}
-/* width: calc(100vw - /* sum of padding, margins, and borders */
-
-.bannerCity {
-	/* white-space: nowrap; */
-	/* border: 1px solid black; */
-	padding: 0.5rem;
-	background-color: rgb(50, 48, 48, 0.4);
-}
-
-.main {
-	/* background-color: rgb(154, 201, 123); */
-	width: 100vw;
-	display: flex;
-}
-
-.layout {
-	flex: 1 0 auto;
-}
-/* flex-grow: 1 = can grow to take up available space if any
-flex-shrink: 0 = will shrink at a rate of 0 compared to other flex items
-if there is not enough space
-flex-basis: auto = the default size is determined by size of content
-*/
-
-/* Desktop */
-/* @media (min-width: 701px) {
-	.main {
-		display: grid;
-		grid-template-columns: 2fr, 1fr;
-		width: 100vw;
-	}
-} */
-
 @media (min-width: 768px) {
 	.container {
-		/* height: 80vh; */
+		height: 100%;
 		display: flex;
-		align-items: flex-end;
-		padding-bottom: 2rem;
+		justify-content: flex-end;
+		width: 60%;
+		padding: 2rem;
 	}
 
 	.sidePanel {
@@ -252,7 +158,58 @@ flex-basis: auto = the default size is determined by size of content
 		backdrop-filter: blur(10px);
 		border: 1 px solid rgba(255, 255, 255, 0.18);
 		z-index: 10;
-		padding: 3rem 2rem;
+		padding: 1rem 2rem;
 		overflow-y: scroll;
+	}
+
+	.cityTemp {
+		font-size: 5rem;
+		margin: 0;
+	}
+
+	.cityName {
+		font-size: 2rem;
+	}
+
+	.localTime {
+		font-size: 0.8rem;
+	}
+
+	.weatherIcon {
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+
+	.weatherCondition {
+		font-size: 0.8rem;
+	}
+
+	.weatherDetailsContainer {
+		font-size: 0.8rem;
+	}
+
+	.inputField {
+		font-size: 0.8rem;
+	}
+
+	.searchListItem {
+		color: #fff;
+		font-size: 1rem;
+		padding: 0.4rem;
+	}
+
+	.delAllBtn {
+		font-size: 0.8rem;
+	}
+}
+
+@media (min-width: 1024px) {
+	.cityTemp {
+		font-size: 7rem;
+		margin: 0;
+	}
+
+	.cityName {
+		font-size: 3rem;
 	}
 }

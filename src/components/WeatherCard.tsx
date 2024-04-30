@@ -3,6 +3,7 @@ import styles from './weather.module.css';
 import '../app/globals.css';
 import Image from 'next/image';
 import closeBtn from '../../public/closeBtn.svg';
+import { IoIosClose } from 'react-icons/io';
 
 type City = {
 	cityName?: string;
@@ -26,33 +27,14 @@ const WeatherCard = ({ cityName, temperature, currConditionText, deleteCity, cou
 
 	return (
 		<div className={`${highTemp ? styles.bgHighTemp : lowTempOrRain ? styles.bgLowTemp : styles.bgModerateTemp} ${styles.card}`}>
-			<div className={styles.closeBtn}>
-				<Image src={closeBtn} width={20} height={20} alt='Close Button' onClick={deleteCity} />
-			</div>
-
-			<div>
-				<span className={styles.temp}>{temperature}°C</span>
+			<div className={styles.previousSearches}>
 				<span className={styles.cityName}>{cityName}</span>
-				<span className={styles.country}>({country})</span>
-				<div className={styles.weatherDetails}>
-					<small>
-						<span>{localTime}</span>
-						<span className={styles.pipe}>&#x7c;</span>
-						<span>{currConditionText}</span>
-					</small>
-
-					<small>
-						<span>Feels&nbsp;like:&nbsp;{feelslike}&#176;</span>
-						<span className={styles.pipe}>&#x7c;</span>
-						<span>Humidity:&nbsp;{humidity}%</span>
-						<div>
-							<span>Cloud:&nbsp;{cloud}%</span>
-							<span className={styles.pipe}>&#x7c;</span>
-							<span>Wind:&nbsp;{wind}m/s</span>
-						</div>
-					</small>
-				</div>
+				<span className={styles.pipe}>&#x7c;</span>
+				<span className={styles.country}>{country}</span>
 			</div>
+
+			<IoIosClose onClick={deleteCity} className={styles.closeBtn} />
+			{/* <Image src={closeBtn} width={20} height={20} alt='Close Button' onClick={deleteCity} /> */}
 		</div>
 	);
 };

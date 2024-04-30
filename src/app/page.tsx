@@ -349,52 +349,52 @@ export default function Home() {
 		}
 	};
 
-	const animatedBannerCities = [
-		{ id: '2618724', name: 'New York' },
-		{ id: '2280360', name: 'Stockholm' },
-		{ id: '3125553', name: 'Tokyo' },
-		{ id: '714482', name: 'Madrid' },
-		{ id: '2267741', name: 'Järvsö' },
-	];
+	// const animatedBannerCities = [
+	// 	{ id: '2618724', name: 'New York' },
+	// 	{ id: '2280360', name: 'Stockholm' },
+	// 	{ id: '3125553', name: 'Tokyo' },
+	// 	{ id: '714482', name: 'Madrid' },
+	// 	{ id: '2267741', name: 'Järvsö' },
+	// ];
 
-	useEffect(() => {
-		const getBannerCities = async () => {
-			try {
-				const promises = animatedBannerCities.map(async (bannerCity) => {
-					const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${bannerCity.id}`);
+	// useEffect(() => {
+	// 	const getBannerCities = async () => {
+	// 		try {
+	// 			const promises = animatedBannerCities.map(async (bannerCity) => {
+	// 				const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=id:${bannerCity.id}`);
 
-					const data = await res.json();
+	// 				const data = await res.json();
 
-					return { ...data, city: bannerCity.name };
-				});
+	// 				return { ...data, city: bannerCity.name };
+	// 			});
 
-				const bannerCityResults = await Promise.all(promises);
-				setBannerCities(bannerCityResults);
-			} catch (error) {
-				console.error('Error:', error);
-			}
-		};
-		getBannerCities();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	// 			const bannerCityResults = await Promise.all(promises);
+	// 			setBannerCities(bannerCityResults);
+	// 		} catch (error) {
+	// 			console.error('Error:', error);
+	// 		}
+	// 	};
+	// 	getBannerCities();
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, []);
 
 	const clearLocalStorage = () => {
 		localStorage.clear();
 		setWeatherList([]);
 	};
 
-	const bannerVariants = {
-		animate: {
-			y: ['-10vh', '1.5vh'],
-			transition: {
-				y: {
-					repeatType: 'loop',
-					duration: 2,
-					ease: 'linear',
-				},
-			},
-		},
-	};
+	// const bannerVariants = {
+	// 	animate: {
+	// 		y: ['-10vh', '1.5vh'],
+	// 		transition: {
+	// 			y: {
+	// 				repeatType: 'loop',
+	// 				duration: 2,
+	// 				ease: 'linear',
+	// 			},
+	// 		},
+	// 	},
+	// };
 
 	const getBackgroundImage = (isDay: boolean) => {
 		let timeOfDay = isDay ? 'day' : 'night';
@@ -547,64 +547,36 @@ export default function Home() {
 
 	return (
 		<main className={styles.main} style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
-			{/* <section className={styles.container}> */}
-			{/* <header className={styles.bannerContainer}>
-					<div className={styles.bannerItems}>
-						{bannerCities?.map((city, i) => (
-							<motion.div key={i} className={styles.bannerCity} variants={bannerVariants} animate='animate' exit='exit'>
-								<div className={styles.bannerCityName}>{city.location.name}&nbsp;</div>
-								<div className={styles.bannerCityTemp}>{city.current.temp_c}°C</div>
-								<img
-									src={city.current.condition.icon}
-									width={40}
-									height={40}
-									alt={`Weather icon for ${city.location.name}`}
-									className={styles.bannerIcon}
-								/>
-							</motion.div>
-						))}
-					</div>
-				</header> */}
-
 			<section className={styles.container}>
-				{/* <div className={styles.cityDetails}> */}
-				<div className={styles.cityTemp}>
-					<h1 className={styles.temp}>{displayInContentContainer?.temperature?.toFixed(1)}&#176;</h1>
+				<article className={styles.weatherInfoContainer}>
+					<h1 className={styles.cityTemp}>{displayInContentContainer?.temperature?.toFixed(1)}&#176;</h1>
+					<div>
+						<h1 className={styles.cityName}>{displayInContentContainer?.cityName}</h1>
+						<p className={styles.localTime}>{displayInContentContainer?.localTime}</p>
+					</div>
+					<div>
+						<img src={displayInContentContainer?.currConditionIcon} width={40} height={40} className={styles.weatherIcon} alt='Weather icon' />
+						<aside className={styles.weatherCondition}>{displayInContentContainer?.currConditionText}</aside>
+					</div>
+				</article>
 
-					<h1 className={styles.cityName}>{displayInContentContainer?.cityName}</h1>
-
-					<small>
-						<span className={styles.localTime}>{displayInContentContainer?.localTime}</span>
-					</small>
-				</div>
-
-				<div>
-					<div className={styles.weatherDescription}>{displayInContentContainer?.currConditionText}</div>
-
-					<img src={displayInContentContainer?.currConditionIcon} width={40} height={40} className={styles.bannerIcon} alt='Weather icon' />
-
-					<ul className={styles.weatherDetails}>
-						<li className={styles.feelslike}>
-							<span>Feels like:</span> <span>{displayInContentContainer?.feelslike?.toFixed(1)}&#176;</span>
-						</li>
-						<li className={styles.humidity}>
-							<span>Humidity:</span> <span>{displayInContentContainer?.humidity}%</span>
-						</li>
-						<li className={styles.cloud}>
-							<span>Cloud:</span> <span>{displayInContentContainer?.cloud}%</span>
-						</li>
-						<li className={styles.wind}>
-							<span>Wind:</span> <span>{displayInContentContainer?.wind}m/s</span>
-						</li>
-					</ul>
-				</div>
-				{/* </div> */}
+				<ul className={styles.weatherDetailsContainer}>
+					<li className={styles.feelslike}>
+						<span>Feels like:</span> <span>{displayInContentContainer?.feelslike?.toFixed(1)}&#176;</span>
+					</li>
+					<li className={styles.humidity}>
+						<span>Humidity:</span> <span>{displayInContentContainer?.humidity}%</span>
+					</li>
+					<li className={styles.cloud}>
+						<span>Cloud:</span> <span>{displayInContentContainer?.cloud}%</span>
+					</li>
+					<li className={styles.wind}>
+						<span>Wind:</span> <span>{displayInContentContainer?.wind}m/s</span>
+					</li>
+				</ul>
 			</section>
-			{/* </section> */}
+
 			<aside className={styles.sidePanel}>
-				<div className={styles.sidePanelHeader}>
-					<Image src={logoAlster} height={25} width={25} alt='Alster logo' className={styles.logoAlster} />
-				</div>
 				<div className={styles.inputContainer}>
 					<div>
 						<input
@@ -679,12 +651,11 @@ export default function Home() {
 							Delete All Previous
 						</button>
 					</div>
-					{/* Stod weatherData först och då renderades inte local storage förrän jag lagt till en ny stad. Allt rätt
-				               när ändrade till weatherList */}
+
 					{weatherList &&
 						weatherList.map((item, i) => {
 							return (
-								<div key={i}>
+								<div key={i} className={styles.weatherCardContainer}>
 									{
 										<WeatherCard
 											cityName={item.cityName}

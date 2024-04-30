@@ -1,38 +1,33 @@
 .card {
 	display: flex;
-	color: #ccc;
-	padding: 1.5rem;
-	border-radius: 2px;
-	margin: 1rem;
-	gap: 2rem;
-	position: relative;
+	justify-content: space-between;
+	align-items: center;
+	color: #fff;
+	font-size: 0.8rem;
+	padding-left: 0.4rem;
+	margin-bottom: 1rem;
 }
 
 .closeBtn {
-	position: absolute;
-	top: 0.6rem;
-	right: 0.6rem;
 	cursor: pointer;
+	width: 1.2rem;
+	height: 1.2rem;
 }
 
 .temp {
-	font-size: 1.2rem;
-	font-weight: 400;
+	font-size: 0.8rem;
 	display: inline-block;
 	margin-right: 0.2rem;
 }
 
 .cityName,
 .country {
-	font-size: 1rem;
-	font-weight: 400;
-	margin-right: 0.2rem;
+	font-size: 0.8rem;
 }
 
 .weatherDetails {
 	display: flex;
 	flex-direction: column;
-	margin-top: 0.8rem;
 }
 
 .pipe {
@@ -40,14 +35,13 @@
 	margin-left: 0.5rem;
 }
 
-.bgHighTemp {
-	background-color: rgb(242, 71, 38, 0.4);
-}
+@media (min-width: 768px) {
+	/* .temp {
+		font-size: 1.2rem;
+	} */
 
-.bgModerateTemp {
-	background-color: rgb(250, 199, 16, 0.4);
-}
-
-.bgLowTemp {
-	background-color: rgb(45, 155, 240, 0.4);
+	.cityName,
+	.country {
+		font-size: 0.8rem;
+	}
 }

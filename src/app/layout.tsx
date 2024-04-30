@@ -2,7 +2,6 @@ import { Rubik, Roboto, Poppins } from 'next/font/google';
 // import localFont from 'next/font/local'
 import type { Metadata } from 'next';
 
-
 const roboto = Roboto({
 	weight: ['400', '700', '900'],
 	subsets: ['latin'],
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang='en' className={roboto.className}>
+		<html lang='en' className={rubik.className}>
 			<body className={rubik.className}>{children}</body>
 		</html>
 	);

@@ -1,7 +1,7 @@
 import { Rubik, Roboto, Poppins } from 'next/font/google';
 // import localFont from 'next/font/local'
 import type { Metadata } from 'next';
-import Navbar from '@/components/Navbar';
+
 
 const roboto = Roboto({
 	weight: ['400', '700', '900'],

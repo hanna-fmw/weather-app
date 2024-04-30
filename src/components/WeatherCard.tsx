@@ -19,12 +19,10 @@ type City = {
 };
 
 const WeatherCard = ({ cityName, temperature, currConditionText, deleteCity, country, localTime, feelslike, humidity, cloud, wind }: City) => {
-	// console.log(currCondition)
 	//Background colors
 	const highTemp = temperature && temperature > 19;
 	//Blue background
 	const lowTempOrRain = (temperature && temperature < 1) || currConditionText?.toLowerCase().includes('rain');
-	//Else (i.e. 1-19 degrees and no rain) yellow background
 
 	return (
 		<div className={`${highTemp ? styles.bgHighTemp : lowTempOrRain ? styles.bgLowTemp : styles.bgModerateTemp} ${styles.card}`}>

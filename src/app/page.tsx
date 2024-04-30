@@ -546,9 +546,9 @@ export default function Home() {
 	let backgroundImage = getBackgroundImage(isDay);
 
 	return (
-		<main className={styles.appWrapper} style={{ backgroundImage: `url(${backgroundImage})` }}>
-			<section className={styles.container}>
-				<header className={styles.bannerContainer}>
+		<main className={styles.main} style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
+			{/* <section className={styles.container}> */}
+			{/* <header className={styles.bannerContainer}>
 					<div className={styles.bannerItems}>
 						{bannerCities?.map((city, i) => (
 							<motion.div key={i} className={styles.bannerCity} variants={bannerVariants} animate='animate' exit='exit'>
@@ -564,43 +564,43 @@ export default function Home() {
 							</motion.div>
 						))}
 					</div>
-				</header>
+				</header> */}
 
-				<section className={styles.contentContainer}>
-					<div className={styles.cityDetails}>
-						<div className={styles.cityTemp}>
-							<h1 className={styles.temp}>{displayInContentContainer?.temperature?.toFixed(1)}&#176;</h1>
+			<section className={styles.container}>
+				{/* <div className={styles.cityDetails}> */}
+				<div className={styles.cityTemp}>
+					<h1 className={styles.temp}>{displayInContentContainer?.temperature?.toFixed(1)}&#176;</h1>
 
-							<h1 className={styles.cityName}>{displayInContentContainer?.cityName}</h1>
+					<h1 className={styles.cityName}>{displayInContentContainer?.cityName}</h1>
 
-							<small>
-								<span className={styles.localTime}>{displayInContentContainer?.localTime}</span>
-							</small>
-						</div>
+					<small>
+						<span className={styles.localTime}>{displayInContentContainer?.localTime}</span>
+					</small>
+				</div>
 
-						<div>
-							<div className={styles.weatherDescription}>{displayInContentContainer?.currConditionText}</div>
+				<div>
+					<div className={styles.weatherDescription}>{displayInContentContainer?.currConditionText}</div>
 
-							<img src={displayInContentContainer?.currConditionIcon} width={40} height={40} className={styles.bannerIcon} alt='Weather icon' />
+					<img src={displayInContentContainer?.currConditionIcon} width={40} height={40} className={styles.bannerIcon} alt='Weather icon' />
 
-							<ul className={styles.weatherDetails}>
-								<li className={styles.feelslike}>
-									<span>Feels like:</span> <span>{displayInContentContainer?.feelslike?.toFixed(1)}&#176;</span>
-								</li>
-								<li className={styles.humidity}>
-									<span>Humidity:</span> <span>{displayInContentContainer?.humidity}%</span>
-								</li>
-								<li className={styles.cloud}>
-									<span>Cloud:</span> <span>{displayInContentContainer?.cloud}%</span>
-								</li>
-								<li className={styles.wind}>
-									<span>Wind:</span> <span>{displayInContentContainer?.wind}m/s</span>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</section>
+					<ul className={styles.weatherDetails}>
+						<li className={styles.feelslike}>
+							<span>Feels like:</span> <span>{displayInContentContainer?.feelslike?.toFixed(1)}&#176;</span>
+						</li>
+						<li className={styles.humidity}>
+							<span>Humidity:</span> <span>{displayInContentContainer?.humidity}%</span>
+						</li>
+						<li className={styles.cloud}>
+							<span>Cloud:</span> <span>{displayInContentContainer?.cloud}%</span>
+						</li>
+						<li className={styles.wind}>
+							<span>Wind:</span> <span>{displayInContentContainer?.wind}m/s</span>
+						</li>
+					</ul>
+				</div>
+				{/* </div> */}
 			</section>
+			{/* </section> */}
 			<aside className={styles.sidePanel}>
 				<div className={styles.sidePanelHeader}>
 					<Image src={logoAlster} height={25} width={25} alt='Alster logo' className={styles.logoAlster} />

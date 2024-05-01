@@ -1,5 +1,4 @@
 import { Rubik, Roboto, Poppins } from 'next/font/google';
-// import localFont from 'next/font/local'
 import type { Metadata } from 'next';
 
 const roboto = Roboto({

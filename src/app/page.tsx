@@ -102,7 +102,6 @@ export default function Home() {
 	const fetchWeatherByIp = async () => {
 		const res = await fetch(`//api.weatherapi.com/v1/current.json?key=${apiKey}&q=auto:ip`);
 		const data = await res.json();
-		// console.log('Data from ip lookup api', data);
 
 		setWeatherByIp(data);
 	};

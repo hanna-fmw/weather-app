@@ -5,7 +5,6 @@ import Image from 'next/image';
 import styles from './page.module.css';
 import './globals.css';
 import WeatherCard from '@/components/WeatherCard';
-import logoAlster from '../../public/logoAlster.png';
 import React, { useState, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import Popup from '@/components/Popup';

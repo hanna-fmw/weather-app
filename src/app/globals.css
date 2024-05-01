@@ -16,6 +16,6 @@ body {
 	color: rgb(var(--foreground-rgb));
 	background-image: url('../../public/bgImages/day/cloud.jpg');
 	width: 100vw;
-
+	overflow-x: hidden;
 	font-family: rubik, sans-serif;
 }

@@ -1,6 +1,9 @@
-//Convert API date/time output to more readable format
 export const formatLocalTime = (localTime) => {
-	const date = new Date(localTime)
+	if (!localTime || isNaN(new Date(localTime).getTime())) {
+		return '';
+	}
+
+	const date = new Date(localTime);
 
 	const options = {
 		hour: 'numeric',
@@ -8,9 +11,9 @@ export const formatLocalTime = (localTime) => {
 		weekday: 'long',
 		month: 'short',
 		day: 'numeric',
-	}
+	};
 
-	const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date)
+	const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
 
-	return formattedDate
-}
+	return formattedDate;
+};

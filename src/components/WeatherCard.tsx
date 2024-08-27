@@ -1,23 +1,21 @@
-import React from 'react';
-import styles from './weather.module.css';
-import '../app/globals.css';
-import Image from 'next/image';
-import closeBtn from '../../public/closeBtn.svg';
-import { IoIosClose } from 'react-icons/io';
+import React from 'react'
+import styles from './weather.module.css'
+import '../app/globals.css'
+import { IoIosClose } from 'react-icons/io'
 
 type City = {
-	cityName?: string;
-	temperature?: number;
-	currConditionText?: string;
-	country?: string;
-	isDay?: number;
-	deleteCity: () => void;
-	localTime?: string;
-	feelslike?: number;
-	humidity?: number;
-	cloud?: number;
-	wind?: number;
-};
+	cityName?: string
+	temperature?: number
+	currConditionText?: string
+	country?: string
+	isDay?: number
+	deleteCity: () => void
+	localTime?: string
+	feelslike?: number
+	humidity?: number
+	cloud?: number
+	wind?: number
+}
 
 const WeatherCard = ({ cityName, deleteCity, country }: City) => {
 	return (
@@ -29,7 +27,7 @@ const WeatherCard = ({ cityName, deleteCity, country }: City) => {
 			</div>
 			<IoIosClose onClick={deleteCity} className={styles.closeBtn} />
 		</div>
-	);
-};
+	)
+}
 
-export default WeatherCard;
+export default WeatherCard
